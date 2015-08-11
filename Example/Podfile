@@ -1,0 +1,13 @@
+source 'https://github.com/CocoaPods/Specs.git'
+use_frameworks!
+
+target 'NHSearchViewController_Example', :exclusive => true do
+  pod "NHSearchViewController", :path => "../"
+end
+
+target 'NHSearchViewController_Tests', :exclusive => true do
+  pod "NHSearchViewController", :path => "../"
+
+  pod 'Specta'
+  pod 'Expecta'
+end
