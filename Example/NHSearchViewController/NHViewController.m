@@ -7,7 +7,7 @@
 //
 
 #import "NHViewController.h"
-@import NHSearchViewController;
+@import NHSearchController;
 
 @interface NHViewController ()
 
