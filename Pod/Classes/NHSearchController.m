@@ -104,7 +104,7 @@
                                    relatedBy:NSLayoutRelationEqual
                                    toItem:self.searchBar
                                    attribute:NSLayoutAttributeBottom
-                                   multiplier:1.0 constant:-5]];
+                                   multiplier:1.0 constant:-7.5]];
     [self.searchTextField addConstraint:[NSLayoutConstraint constraintWithItem:self.searchTextField
                                                                      attribute:NSLayoutAttributeHeight
                                                                      relatedBy:NSLayoutRelationEqual
@@ -132,7 +132,7 @@
                                    relatedBy:NSLayoutRelationEqual
                                    toItem:self.searchBar
                                    attribute:NSLayoutAttributeBottom
-                                   multiplier:1.0 constant:-5]];
+                                   multiplier:1.0 constant:-7.5]];
     
     self.closeButtonWidth = [NSLayoutConstraint constraintWithItem:self.closeButton
                                                          attribute:NSLayoutAttributeWidth
@@ -151,7 +151,7 @@
     
 
     
-    self.searchBar.frame = CGRectMake(0, 0, 320, 38);
+    self.searchBar.frame = CGRectMake(0, 0, 320, 43);
     
     [self.searchTextField addObserver:self
                            forKeyPath:@"text"
