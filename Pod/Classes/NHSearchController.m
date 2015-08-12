@@ -224,6 +224,10 @@
 }
 
 - (void)changeText:(NSString*)text {
+    if (!self.searchEnabled) {
+        return;
+    }
+    
     self.searchResultContainer.alpha = ([text length] ? 1 : 0.5);
     self.searchTableView.hidden = ![text length];
 }
@@ -234,6 +238,7 @@
         return;
     }
     
+    self.searchEnabled = YES;
     
     CGRect newContainerFrame = self.container.view.frame;
     CGRect newSearchBarFrame = self.searchBar.frame;
@@ -283,15 +288,11 @@
                      } completion:^(BOOL finished) {
                          
                      }];
-    
-    self.searchEnabled = YES;
-    
-    
 }
 
 - (void)stopSearch {
-    self.searchTextField.text = nil;
     self.searchEnabled = NO;
+    self.searchTextField.text = nil;
     self.closeButtonWidth.constant = 0;
     [self.searchBar endEditing:YES];
     self.closeButton.hidden = YES;
