@@ -63,7 +63,7 @@
 		684F2CA6E0A47783EB7E6485 /* Pods-NHSearchViewController_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NHSearchViewController_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NHSearchViewController_Example/Pods-NHSearchViewController_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		BCE0AF92B1DEA4F721F08ABB /* Pods_NHSearchViewController_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NHSearchViewController_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CB37D7FAB85AB6A226C6D496 /* NHSearchViewController.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = NHSearchViewController.podspec; path = ../NHSearchViewController.podspec; sourceTree = "<group>"; };
+		CB37D7FAB85AB6A226C6D496 /* NHSearchController.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = NHSearchController.podspec; path = ../NHSearchController.podspec; sourceTree = "<group>"; };
 		E2370D8CDAD551573A89E3FA /* Pods-NHSearchViewController_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NHSearchViewController_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-NHSearchViewController_Example/Pods-NHSearchViewController_Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -186,7 +186,7 @@
 		60FF7A9C1954A5C5007DD14C /* Podspec Metadata */ = {
 			isa = PBXGroup;
 			children = (
-				CB37D7FAB85AB6A226C6D496 /* NHSearchViewController.podspec */,
+				CB37D7FAB85AB6A226C6D496 /* NHSearchController.podspec */,
 				401CD0178FE8FE640E19A341 /* README.md */,
 				4F25F0F236944E33836EC728 /* LICENSE */,
 			);
