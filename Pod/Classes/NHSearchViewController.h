@@ -18,9 +18,12 @@
 
 @property (nonatomic, readonly, strong) UIView *searchBar;
 @property (nonatomic, readonly, strong) NHSearchTextField *searchTextField;
+@property (nonatomic, readonly, strong) UIButton *closeButton;
 
+@property (nonatomic, readonly, strong) UIView *searchResultContainer;
 @property (nonatomic, readonly, strong) UITableView *searchTableView;
 
+@property (nonatomic, assign) BOOL shouldOffsetStatusBar;
 
 - (instancetype)initWithContainerViewController:(UIViewController*)container;
 
