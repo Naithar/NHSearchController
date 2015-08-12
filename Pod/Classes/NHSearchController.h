@@ -14,7 +14,9 @@
 
 @end
 
-@interface NHSearchViewController : NSObject
+
+
+@interface NHSearchController : NSObject
 
 @property (nonatomic, readonly, strong) UIView *searchBar;
 @property (nonatomic, readonly, strong) NHSearchTextField *searchTextField;

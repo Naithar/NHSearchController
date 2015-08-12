@@ -11,7 +11,7 @@
 
 @interface NHViewController ()
 
-@property (nonatomic, strong) NHSearchViewController *nhSearchController;
+@property (nonatomic, strong) NHSearchController *nhSearchController;
 @end
 
 @implementation NHViewController
@@ -20,7 +20,7 @@
 {
     [super viewDidLoad];
 	
-    self.nhSearchController = [[NHSearchViewController alloc] initWithContainerViewController:self.navigationController];
+    self.nhSearchController = [[NHSearchController alloc] initWithContainerViewController:self.navigationController];
     
     CGRect frame = self.nhSearchController.searchBar.frame;
     frame.origin = CGPointMake(0, 100);

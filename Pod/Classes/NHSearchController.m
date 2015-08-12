@@ -6,7 +6,7 @@
 //
 //
 
-#import "NHSearchViewController.h"
+#import "NHSearchController.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -26,7 +26,7 @@
 
 @end
 
-@interface NHSearchViewController ()<UITextFieldDelegate>
+@interface NHSearchController ()<UITextFieldDelegate>
 
 @property (nonatomic, weak) UIViewController *container;
 @property (nonatomic, assign) CGRect containerInitialRect;
@@ -47,7 +47,7 @@
 
 @end
 
-@implementation NHSearchViewController
+@implementation NHSearchController
 
 - (instancetype)initWithContainerViewController:(UIViewController*)container {
     self = [super init];
