@@ -36,12 +36,42 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="whP-gf-Uak" kind="relationship" relationship="rootViewController" id="svW-KN-Kle"/>
+                        <segue destination="usl-Gg-sO1" kind="relationship" relationship="rootViewController" id="0ry-xc-sUa"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cJ1-ea-gZg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="305" y="433"/>
+            <point key="canvasLocation" x="-131" y="433"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="hrz-SU-rWP">
+            <objects>
+                <viewController id="usl-Gg-sO1" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Bfo-oh-1oW"/>
+                        <viewControllerLayoutGuide type="bottom" id="FK6-9n-I2b"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="zhE-7l-Bzz">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MVK-Ds-HTx">
+                                <rect key="frame" x="284" y="191" width="46" height="30"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="whP-gf-Uak" kind="push" id="yaJ-zc-LUv"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="V8K-Go-a1j"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eit-w4-w15" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="488" y="452"/>
         </scene>
     </scenes>
 </document>

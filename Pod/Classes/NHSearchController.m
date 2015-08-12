@@ -230,6 +230,10 @@
     
     self.searchResultContainer.alpha = ([text length] ? 1 : 0.5);
     self.searchTableView.hidden = ![text length];
+    
+    if ([self.nhDelegate respondsToSelector:@selector(nhSearchController:didChangeText:)]) {
+        [self.nhDelegate nhSearchController:self didChangeText:text];
+    }
 }
 
 - (void)startSearch {
@@ -288,9 +292,17 @@
                      } completion:^(BOOL finished) {
                          
                      }];
+    
+    if ([self.nhDelegate respondsToSelector:@selector(nhSearchControllerDidBegin:)]) {
+        [self.nhDelegate nhSearchControllerDidBegin:self];
+    }
 }
 
 - (void)stopSearch {
+    if (!self.searchEnabled) {
+        return;
+    }
+    
     self.searchEnabled = NO;
     self.searchTextField.text = nil;
     self.closeButtonWidth.constant = 0;
@@ -310,6 +322,10 @@
                      } completion:^(BOOL finished) {
                          [self.searchResultContainer removeFromSuperview];
                      }];
+    
+    if ([self.nhDelegate respondsToSelector:@selector(nhSearchControllerDidEnd:)]) {
+        [self.nhDelegate nhSearchControllerDidEnd:self];
+    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -318,7 +334,11 @@
 }
 
 - (void)dealloc {
+#ifdef DEBUG
     NSLog(@"dealloc search");
+#endif
+    
+    [self.searchResultContainer removeFromSuperview];
     
     [self.searchTextField removeObserver:self
                               forKeyPath:@"text"];

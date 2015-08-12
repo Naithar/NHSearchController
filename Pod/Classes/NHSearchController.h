@@ -8,15 +8,26 @@
 
 @import UIKit;
 
+@class NHSearchController;
+
 @interface NHSearchTextField : UITextField
 
 @property (nonatomic, assign) UIEdgeInsets textInset;
 
 @end
 
+@protocol NHSearchControllerDelegate <NSObject>
 
+@optional
+- (void)nhSearchController:(NHSearchController*)controller didChangeText:(NSString*)text;
+- (void)nhSearchControllerDidBegin:(NHSearchController*)controller;
+- (void)nhSearchControllerDidEnd:(NHSearchController*)controller;
+
+@end
 
 @interface NHSearchController : NSObject
+
+@property (nonatomic, weak) id<NHSearchControllerDelegate> nhDelegate;
 
 @property (nonatomic, readonly, strong) UIView *searchBar;
 @property (nonatomic, readonly, strong) NHSearchTextField *searchTextField;
