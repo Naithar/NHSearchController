@@ -8,15 +8,9 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = "NHSearchViewController"
+  s.name             = "NHSearchController"
   s.version          = "0.1.1"
-  s.summary          = "A short description of NHSearchViewController."
-  s.description      = <<-DESC
-                       An optional longer description of NHSearchViewController
-
-                       * Markdown format.
-                       * Don't worry about the indent, we strip it!
-                       DESC
+  s.summary          = "custom search view with result table view"
   s.homepage         = "https://github.com/<GITHUB_USERNAME>/NHSearchViewController"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
