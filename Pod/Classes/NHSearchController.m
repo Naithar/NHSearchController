@@ -245,6 +245,76 @@ table, \
 #ifdef DEBUG
     NSLog(@"dealloc search bar");
 #endif
+    
+    self.textField.delegate = nil;
+}
+
+@end
+
+@interface NHSearchResultView ()
+
+@property (nonatomic, strong) UITableView *tableView;
+
+@end
+
+@implementation NHSearchResultView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    
+    if (self) {
+        [self nhCommonInit];
+    }
+    return self;
+}
+
+- (void)nhCommonInit {
+    self.tableView = [[UITableView alloc] init];
+    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:self.tableView];
+    
+    
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.tableView
+                         attribute:NSLayoutAttributeTop
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeTop
+                         multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.tableView
+                         attribute:NSLayoutAttributeLeft
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeLeft
+                         multiplier:1.0 constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.tableView
+                         attribute:NSLayoutAttributeRight
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeRight
+                         multiplier:1.0 constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.tableView
+                         attribute:NSLayoutAttributeBottom
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeBottom
+                         multiplier:1.0 constant:0]];
+    
+}
+
+- (void)dealloc {
+#ifdef DEBUG
+    NSLog(@"dealloc search result view");
+#endif
+    
+    self.tableView.delegate = nil;
+    self.tableView.dataSource = nil;
 }
 
 @end
@@ -257,8 +327,7 @@ table, \
 
 @property (nonatomic, strong) NHSearchBar *searchBar;
 
-@property (nonatomic, strong) UIView *searchResultContainer;
-@property (nonatomic, strong) UITableView *searchTableView;
+@property (nonatomic, strong) NHSearchResultView *searchResultView;
 
 @property (nonatomic, assign) BOOL searchEnabled;
 
@@ -304,44 +373,11 @@ table, \
                            [strongSelf changeText:strongSelf.searchBar.textField.text];
                        }];
     
-    self.searchResultContainer = [UIView new];
-    self.searchResultContainer.backgroundColor = [UIColor grayColor];
-    
-    self.searchTableView = [[UITableView alloc] init];
-    self.searchTableView.backgroundColor = [UIColor whiteColor];
-    self.searchTableView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.searchResultContainer addSubview:self.searchTableView];
-    
-    
-    [self.searchResultContainer addConstraint:[NSLayoutConstraint constraintWithItem:self.searchTableView
-                                                                           attribute:NSLayoutAttributeTop
-                                                                           relatedBy:NSLayoutRelationEqual
-                                                                              toItem:self.searchResultContainer
-                                                                           attribute:NSLayoutAttributeTop
-                                                                          multiplier:1.0 constant:0]];
-    [self.searchResultContainer addConstraint:[NSLayoutConstraint constraintWithItem:self.searchTableView
-                                                                           attribute:NSLayoutAttributeLeft
-                                                                           relatedBy:NSLayoutRelationEqual
-                                                                              toItem:self.searchResultContainer
-                                                                           attribute:NSLayoutAttributeLeft
-                                                                          multiplier:1.0 constant:0]];
-    
-    [self.searchResultContainer addConstraint:[NSLayoutConstraint constraintWithItem:self.searchTableView
-                                                                           attribute:NSLayoutAttributeRight
-                                                                           relatedBy:NSLayoutRelationEqual
-                                                                              toItem:self.searchResultContainer
-                                                                           attribute:NSLayoutAttributeRight
-                                                                          multiplier:1.0 constant:0]];
-    
-    [self.searchResultContainer addConstraint:[NSLayoutConstraint constraintWithItem:self.searchTableView
-                                                                           attribute:NSLayoutAttributeBottom
-                                                                           relatedBy:NSLayoutRelationEqual
-                                                                              toItem:self.searchResultContainer
-                                                                           attribute:NSLayoutAttributeBottom
-                                                                          multiplier:1.0 constant:0]];
+    self.searchResultView = [[NHSearchResultView alloc] init];
+    self.searchResultView.backgroundColor = [UIColor grayColor];
     
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)];
-    [self.searchResultContainer addGestureRecognizer:self.tapGesture];
+    [self.searchResultView addGestureRecognizer:self.tapGesture];
     
     [self.searchBar setNeedsLayout];
     [self.searchBar layoutIfNeeded];
@@ -379,8 +415,8 @@ table, \
         return;
     }
     
-    self.searchResultContainer.alpha = ([text length] ? 1 : 0.5);
-    self.searchTableView.hidden = ![text length];
+    self.searchResultView.alpha = ([text length] ? 1 : 0.5);
+    self.searchResultView.tableView.hidden = ![text length];
     
     if ([self.nhDelegate respondsToSelector:@selector(nhSearchController:didChangeText:)]) {
         [self.nhDelegate nhSearchController:self didChangeText:text];
@@ -419,13 +455,13 @@ table, \
     tableViewRect.origin.y = offset + newSearchBarFrame.size.height;
     tableViewRect.size.height -= newSearchBarFrame.size.height;
     
-    self.searchResultContainer.frame = tableViewRect;
-    [self.container.view addSubview:self.searchResultContainer];
-    self.searchTableView.hidden = ![self.searchBar.textField.text length];
-    self.searchResultContainer.alpha = 0;
+    self.searchResultView.frame = tableViewRect;
+    [self.container.view addSubview:self.searchResultView];
+    self.searchResultView.tableView.hidden = ![self.searchBar.textField.text length];
+    self.searchResultView.alpha = 0;
     
-    [self.searchResultContainer setNeedsLayout];
-    [self.searchResultContainer layoutIfNeeded];
+    [self.searchResultView setNeedsLayout];
+    [self.searchResultView layoutIfNeeded];
     
     self.searchBar.buttonWidthConstraint.constant = kNHSearchButtonWidth;
     self.searchBar.button.hidden = NO;
@@ -438,7 +474,7 @@ table, \
                          self.searchBar.frame = newSearchBarFrame;
                          self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
                          self.container.view.frame = newContainerFrame;
-                         self.searchResultContainer.alpha = ([self.searchBar.textField.text length] ? 1 : 0.5);
+                         self.searchResultView.alpha = ([self.searchBar.textField.text length] ? 1 : 0.5);
                          [self.searchBar layoutIfNeeded];
                      } completion:^(BOOL finished) {
                          
@@ -468,9 +504,9 @@ table, \
                          self.searchBar.frame = self.searchBarInitialRect;
                          self.container.view.frame = self.containerInitialRect;
                          [self.searchBar layoutIfNeeded];
-                         self.searchResultContainer.alpha = 0;
+                         self.searchResultView.alpha = 0;
                      } completion:^(BOOL finished) {
-                         [self.searchResultContainer removeFromSuperview];
+                         [self.searchResultView removeFromSuperview];
                          
                      }];
     
@@ -489,7 +525,7 @@ table, \
     NSLog(@"dealloc search");
 #endif
     
-    [self.searchResultContainer removeFromSuperview];
+    [self.searchResultView removeFromSuperview];
     
     [self.searchBar.textField removeObserver:self
                                   forKeyPath:@"text"];

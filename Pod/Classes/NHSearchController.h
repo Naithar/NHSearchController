@@ -27,6 +27,12 @@ extern const CGFloat kNHSearchButtonWidth;
 
 @end
 
+@interface NHSearchResultView : UIView
+
+@property (nonatomic, readonly, strong) UITableView *tableView;
+
+@end
+
 @protocol NHSearchControllerDelegate <NSObject>
 
 @optional
@@ -42,8 +48,7 @@ extern const CGFloat kNHSearchButtonWidth;
 
 @property (nonatomic, readonly, strong) NHSearchBar *searchBar;
 
-@property (nonatomic, readonly, strong) UIView *searchResultContainer;
-@property (nonatomic, readonly, strong) UITableView *searchTableView;
+@property (nonatomic, readonly, strong) NHSearchResultView *searchResultView;
 
 @property (nonatomic, assign) BOOL shouldOffsetStatusBar;
 
