@@ -13,13 +13,13 @@
 
 #define image(name) \
 [UIImage imageWithContentsOfFile: \
-[[NSBundle bundleForClass:[NHBottomLoadingView class]]\
+[[NSBundle bundleForClass:[NHSearchController class]]\
 pathForResource:name ofType:@"png"]]
 
 #define localization(name, table) \
 NSLocalizedStringFromTableInBundle(name, \
 table, \
-[NSBundle bundleForClass:[NHBottomLoadingView class]], nil)
+[NSBundle bundleForClass:[NHSearchController class]], nil)
 
 
 @interface NHSearchTextField ()
@@ -102,6 +102,7 @@ table, \
     
     self.searchLeftImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     self.searchLeftImageView.backgroundColor = [UIColor whiteColor];
+    self.searchLeftImageView.image = image(@"NHSearch.icon");
     
     self.searchTextField = [[NHSearchTextField alloc] init];
     self.searchTextField.translatesAutoresizingMaskIntoConstraints = NO;
