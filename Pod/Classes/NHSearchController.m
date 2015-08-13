@@ -112,7 +112,7 @@ table, \
     self.searchTextField.clipsToBounds = YES;
 
     self.searchTextField.delegate = self;
-    self.searchTextField.placeholder = @"NHSearch.placeholder";
+    self.searchTextField.placeholder = localization(@"NHSearch.placeholder", @"NHSearch");
     self.searchTextField.returnKeyType = UIReturnKeySearch;
     self.searchTextField.textAlignment = NSTextAlignmentLeft;
     self.searchTextField.leftView = self.searchLeftImageView;
@@ -125,7 +125,7 @@ table, \
     self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
     self.closeButton.backgroundColor = [UIColor lightGrayColor];
     [self.closeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.closeButton setTitle:@"NHSearch.close" forState:UIControlStateNormal];
+    [self.closeButton setTitle:localization(@"NHSearch.close", @"NHSearch") forState:UIControlStateNormal];
     self.closeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
     [self.closeButton addTarget:self action:@selector(closeButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
     self.closeButton.hidden = YES;
