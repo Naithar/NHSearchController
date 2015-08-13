@@ -24,6 +24,12 @@
     return UIEdgeInsetsInsetRect(bounds, self.textInset);
 }
 
+- (CGRect)leftViewRectForBounds:(CGRect)bounds {
+    CGRect rect = [super leftViewRectForBounds:bounds];
+    rect.origin.x = self.textInset.left - rect.size.width - 5;
+    
+    return rect;
+}
 @end
 
 @interface NHSearchController ()<UITextFieldDelegate>
@@ -36,6 +42,7 @@
 
 @property (nonatomic, strong) UIView *searchBar;
 @property (nonatomic, strong) NHSearchTextField *searchTextField;
+@property (nonatomic, strong) UIImageView *searchLeftImageView;
 @property (nonatomic, strong) UIButton *closeButton;
 
 @property (nonatomic, strong) UIView *searchResultContainer;
@@ -44,6 +51,8 @@
 @property (nonatomic, assign) BOOL searchEnabled;
 
 @property (nonatomic, strong) id textChange;
+
+@property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 
 @end
 
@@ -60,22 +69,41 @@
     return self;
 }
 
+- (void)resetTextInsets {
+    CGSize size = [self.searchTextField.placeholder
+                   boundingRectWithSize:self.searchTextField.bounds.size
+                   options:NSStringDrawingUsesDeviceMetrics|NSStringDrawingUsesFontLeading
+                   attributes:@{ NSFontAttributeName : self.searchTextField.font ?: [UIFont systemFontOfSize:17]}
+                   context:nil].size;
+    
+    CGFloat value = (self.searchTextField.bounds.size.width - size.width) / 2;
+    
+    self.searchTextField.textInset = UIEdgeInsetsMake(0, MAX(25, value), 0, 20);
+    [self.searchTextField setNeedsLayout];
+}
+
 - (void)nhCommonInit {
     self.containerInitialRect = self.container.view.frame;
     
     self.searchBar = [[UIView alloc] init];
     self.searchBar.backgroundColor = [UIColor lightGrayColor];
     
+    self.searchLeftImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    self.searchLeftImageView.backgroundColor = [UIColor redColor];
+    
     self.searchTextField = [[NHSearchTextField alloc] init];
     self.searchTextField.translatesAutoresizingMaskIntoConstraints = NO;
     self.searchTextField.backgroundColor = [UIColor whiteColor];
     self.searchTextField.layer.cornerRadius = 5;
     self.searchTextField.clipsToBounds = YES;
-    self.searchTextField.textInset = UIEdgeInsetsMake(0, 5, 0, 5);
+
     self.searchTextField.delegate = self;
     self.searchTextField.placeholder = @"NHSearch.placeholder";
     self.searchTextField.returnKeyType = UIReturnKeySearch;
-    self.searchTextField.textAlignment = NSTextAlignmentCenter;
+    self.searchTextField.textAlignment = NSTextAlignmentLeft;
+    self.searchTextField.leftView = self.searchLeftImageView;
+    self.searchTextField.leftViewMode = UITextFieldViewModeAlways;
+    self.searchTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     [self.searchBar addSubview:self.searchTextField];
     
     
@@ -202,6 +230,13 @@
                                                                               toItem:self.searchResultContainer
                                                                            attribute:NSLayoutAttributeBottom
                                                                           multiplier:1.0 constant:0]];
+    
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)];
+    [self.searchResultContainer addGestureRecognizer:self.tapGesture];
+    
+    [self.searchBar setNeedsLayout];
+    [self.searchBar layoutIfNeeded];
+    [self resetTextInsets];
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -209,6 +244,14 @@
 }
 
 - (void)closeButtonTouch:(UIButton*)button {
+    [self stopSearch];
+}
+
+- (void)tapGestureAction:(UITapGestureRecognizer*)recognizer {
+    if ([self.searchTextField.text length]) {
+        return;
+    }
+    
     [self stopSearch];
 }
 
@@ -284,7 +327,7 @@
                         options:(UIViewAnimationOptionBeginFromCurrentState
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
-                         self.searchTextField.textAlignment = NSTextAlignmentLeft;
+                         self.searchTextField.textInset = UIEdgeInsetsMake(0, 25, 0, 20);
                          self.searchBar.frame = newSearchBarFrame;
                          self.container.view.frame = newContainerFrame;
                          self.searchResultContainer.alpha = ([self.searchTextField.text length] ? 1 : 0.5);
@@ -314,13 +357,14 @@
                         options:(UIViewAnimationOptionBeginFromCurrentState
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
-                         self.searchTextField.textAlignment = NSTextAlignmentCenter;
                          self.searchBar.frame = self.searchBarInitialRect;
+                         [self resetTextInsets];
                          self.container.view.frame = self.containerInitialRect;
                          [self.searchBar layoutIfNeeded];
                          self.searchResultContainer.alpha = 0;
                      } completion:^(BOOL finished) {
                          [self.searchResultContainer removeFromSuperview];
+                         
                      }];
     
     if ([self.nhDelegate respondsToSelector:@selector(nhSearchControllerDidEnd:)]) {
