@@ -29,7 +29,8 @@ const CGFloat kNHSearchButtonWidth = 95;
 @property (nonatomic, strong) NHSearchTextField *textField;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIButton *button;
-@property (nonatomic, strong) UIView *separator;
+@property (nonatomic, strong) UIView *topSeparator;
+@property (nonatomic, strong) UIView *bottomSeparator;
 
 @property (nonatomic, strong) NSLayoutConstraint *buttonWidthConstraint;
 
@@ -78,10 +79,15 @@ const CGFloat kNHSearchButtonWidth = 95;
     self.button.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 0);
     [self addSubview:self.button];
     
-    self.separator = [UIView new];
-    self.separator.backgroundColor = [UIColor blackColor];
-    self.separator.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:self.separator];
+    self.topSeparator = [UIView new];
+    self.topSeparator.backgroundColor = [UIColor blackColor];
+    self.topSeparator.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:self.topSeparator];
+    
+    self.bottomSeparator = [UIView new];
+    self.bottomSeparator.backgroundColor = [UIColor blackColor];
+    self.bottomSeparator.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:self.bottomSeparator];
     
     [self addConstraint:[NSLayoutConstraint
                          constraintWithItem:self.textField
@@ -149,7 +155,7 @@ const CGFloat kNHSearchButtonWidth = 95;
     
     
     [self addConstraint:[NSLayoutConstraint
-                         constraintWithItem:self.separator
+                         constraintWithItem:self.bottomSeparator
                          attribute:NSLayoutAttributeBottom
                          relatedBy:NSLayoutRelationEqual
                          toItem:self
@@ -157,7 +163,7 @@ const CGFloat kNHSearchButtonWidth = 95;
                          multiplier:1.0 constant:0]];
     
     [self addConstraint:[NSLayoutConstraint
-                         constraintWithItem:self.separator
+                         constraintWithItem:self.bottomSeparator
                          attribute:NSLayoutAttributeLeft
                          relatedBy:NSLayoutRelationEqual
                          toItem:self
@@ -165,20 +171,52 @@ const CGFloat kNHSearchButtonWidth = 95;
                          multiplier:1.0 constant:0]];
     
     [self addConstraint:[NSLayoutConstraint
-                         constraintWithItem:self.separator
+                         constraintWithItem:self.bottomSeparator
                          attribute:NSLayoutAttributeRight
                          relatedBy:NSLayoutRelationEqual
                          toItem:self
                          attribute:NSLayoutAttributeRight
                          multiplier:1.0 constant:0]];
     
-    [self.separator addConstraint:[NSLayoutConstraint
-                                   constraintWithItem:self.separator
-                                   attribute:NSLayoutAttributeHeight
-                                   relatedBy:NSLayoutRelationEqual
-                                   toItem:self.separator
-                                   attribute:NSLayoutAttributeHeight
-                                   multiplier:0 constant:0.5]];
+    [self.bottomSeparator addConstraint:[NSLayoutConstraint
+                                         constraintWithItem:self.bottomSeparator
+                                         attribute:NSLayoutAttributeHeight
+                                         relatedBy:NSLayoutRelationEqual
+                                         toItem:self.bottomSeparator
+                                         attribute:NSLayoutAttributeHeight
+                                         multiplier:0 constant:0.5]];
+    
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.topSeparator
+                         attribute:NSLayoutAttributeTop
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeTop
+                         multiplier:1.0 constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.topSeparator
+                         attribute:NSLayoutAttributeLeft
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeLeft
+                         multiplier:1.0 constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.topSeparator
+                         attribute:NSLayoutAttributeRight
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeRight
+                         multiplier:1.0 constant:0]];
+    
+    [self.topSeparator addConstraint:[NSLayoutConstraint
+                                      constraintWithItem:self.topSeparator
+                                      attribute:NSLayoutAttributeHeight
+                                      relatedBy:NSLayoutRelationEqual
+                                      toItem:self.topSeparator
+                                      attribute:NSLayoutAttributeHeight
+                                      multiplier:0 constant:0.5]];
     
     [self resetTextInsets];
     

@@ -18,7 +18,8 @@ extern const CGFloat kNHSearchButtonWidth;
 @property (nonatomic, readonly, strong) NHSearchTextField *textField;
 @property (nonatomic, readonly, strong) UIImageView *imageView;
 @property (nonatomic, readonly, strong) UIButton *button;
-@property (nonatomic, readonly, strong) UIView *separator;
+@property (nonatomic, readonly, strong) UIView *topSeparator;
+@property (nonatomic, readonly, strong) UIView *bottomSeparator;
 
 
 - (void)setCloseButtonHidden:(BOOL)hidden;
