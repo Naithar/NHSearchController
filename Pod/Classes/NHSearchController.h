@@ -33,6 +33,7 @@
 @property (nonatomic, readonly, strong) NHSearchTextField *searchTextField;
 @property (nonatomic, readonly, strong) UIImageView *searchLeftImageView;
 @property (nonatomic, readonly, strong) UIButton *closeButton;
+@property (nonatomic, readonly, strong) UIView *searchBarSeparator;
 
 @property (nonatomic, readonly, strong) UIView *searchResultContainer;
 @property (nonatomic, readonly, strong) UITableView *searchTableView;

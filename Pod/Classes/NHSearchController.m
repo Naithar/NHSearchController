@@ -56,6 +56,7 @@ table, \
 @property (nonatomic, strong) NHSearchTextField *searchTextField;
 @property (nonatomic, strong) UIImageView *searchLeftImageView;
 @property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UIView *searchBarSeparator;
 
 @property (nonatomic, strong) UIView *searchResultContainer;
 @property (nonatomic, strong) UITableView *searchTableView;
@@ -101,7 +102,7 @@ table, \
     self.searchBar.backgroundColor = [UIColor lightGrayColor];
     
     self.searchLeftImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    self.searchLeftImageView.backgroundColor = [UIColor whiteColor];
+    self.searchLeftImageView.backgroundColor = [UIColor clearColor];
     self.searchLeftImageView.contentMode = UIViewContentModeRight;
     self.searchLeftImageView.image = image(@"NHSearch.icon");
     
@@ -123,7 +124,7 @@ table, \
     
     self.closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
-    self.closeButton.backgroundColor = [UIColor lightGrayColor];
+    self.closeButton.backgroundColor = [UIColor clearColor];
     [self.closeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.closeButton setTitle:localization(@"NHSearch.close", @"NHSearch") forState:UIControlStateNormal];
     self.closeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
@@ -192,6 +193,37 @@ table, \
                                                                     multiplier:0 constant:28]];
     
 
+    self.searchBarSeparator = [UIView new];
+    self.searchBarSeparator.backgroundColor = [UIColor blackColor];
+    self.searchBarSeparator.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.searchBar addSubview:self.searchBarSeparator];
+    
+    [self.searchBar addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBarSeparator
+                                                               attribute:NSLayoutAttributeBottom
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.searchBar
+                                                               attribute:NSLayoutAttributeBottom
+                                                              multiplier:1.0 constant:0]];
+    
+    [self.searchBar addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBarSeparator
+                                                               attribute:NSLayoutAttributeLeft
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.searchBar
+                                                               attribute:NSLayoutAttributeLeft
+                                                              multiplier:1.0 constant:0]];
+    
+    [self.searchBar addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBarSeparator
+                                                               attribute:NSLayoutAttributeRight
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.searchBar
+                                                               attribute:NSLayoutAttributeRight
+                                                              multiplier:1.0 constant:0]];
+    [self.searchBarSeparator addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBarSeparator
+                                                               attribute:NSLayoutAttributeHeight
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.searchBarSeparator
+                                                               attribute:NSLayoutAttributeHeight
+                                                              multiplier:0 constant:0.5]];
     
     self.searchBar.frame = CGRectMake(0, 0, 320, 43);
     
