@@ -159,6 +159,7 @@
     [self.searchResultView layoutIfNeeded];
     
     [self.searchBar setCloseButtonHidden:NO];
+    [self.searchBar.superview bringSubviewToFront:self.searchBar];
     
     [UIView animateWithDuration:0.3
                           delay:0
