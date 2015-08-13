@@ -7,31 +7,11 @@
 //
 
 @import UIKit;
-
-extern const CGFloat kNHSearchTextFieldMinLeftInset;
-extern const UIEdgeInsets kNHSearchTextFieldInsets;
-extern const CGFloat kNHSearchButtonWidth;
+#import "NHSearchTextField.h"
+#import "NHSearchBar.h"
+#import "NHSearchResultView.h"
 
 @class NHSearchController;
-
-@interface NHSearchTextField : UITextField
-@property (nonatomic, assign) UIEdgeInsets textInset;
-@end
-
-@interface NHSearchBar : UIView
-
-@property (nonatomic, readonly, strong) NHSearchTextField *textField;
-@property (nonatomic, readonly, strong) UIImageView *imageView;
-@property (nonatomic, readonly, strong) UIButton *button;
-@property (nonatomic, readonly, strong) UIView *separator;
-
-@end
-
-@interface NHSearchResultView : UIView
-
-@property (nonatomic, readonly, strong) UITableView *tableView;
-
-@end
 
 @protocol NHSearchControllerDelegate <NSObject>
 

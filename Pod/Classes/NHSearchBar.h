@@ -1,0 +1,26 @@
+//
+//  NHSearchBar.h
+//  Pods
+//
+//  Created by Sergey Minakov on 13.08.15.
+//
+//
+
+@import UIKit;
+#import "NHSearchTextField.h"
+
+extern const CGFloat kNHSearchTextFieldMinLeftInset;
+extern const UIEdgeInsets kNHSearchTextFieldInsets;
+extern const CGFloat kNHSearchButtonWidth;
+
+@interface NHSearchBar : UIView
+
+@property (nonatomic, readonly, strong) NHSearchTextField *textField;
+@property (nonatomic, readonly, strong) UIImageView *imageView;
+@property (nonatomic, readonly, strong) UIButton *button;
+@property (nonatomic, readonly, strong) UIView *separator;
+
+
+- (void)setCloseButtonHidden:(BOOL)hidden;
+
+@end
