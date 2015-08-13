@@ -8,7 +8,19 @@
 
 #import "NHSearchController.h"
 
-#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v) \\
+([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
+#define image(name) \
+[UIImage imageWithContentsOfFile: \
+[[NSBundle bundleForClass:[NHBottomLoadingView class]]\
+pathForResource:name ofType:@"png"]]
+
+#define localization(name, table) \
+NSLocalizedStringFromTableInBundle(name, \
+table, \
+[NSBundle bundleForClass:[NHBottomLoadingView class]], nil)
+
 
 @interface NHSearchTextField ()
 
@@ -89,7 +101,7 @@
     self.searchBar.backgroundColor = [UIColor lightGrayColor];
     
     self.searchLeftImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    self.searchLeftImageView.backgroundColor = [UIColor redColor];
+    self.searchLeftImageView.backgroundColor = [UIColor whiteColor];
     
     self.searchTextField = [[NHSearchTextField alloc] init];
     self.searchTextField.translatesAutoresizingMaskIntoConstraints = NO;
