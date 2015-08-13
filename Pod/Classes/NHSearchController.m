@@ -8,7 +8,7 @@
 
 #import "NHSearchController.h"
 
-#define SYSTEM_VERSION_LESS_THAN(v) \\
+#define SYSTEM_VERSION_LESS_THAN(v) \
 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 #define image(name) \
