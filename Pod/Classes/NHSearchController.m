@@ -8,6 +8,10 @@
 
 #import "NHSearchController.h"
 
+const CGFloat kNHSearchTextFieldMinLeftInset = 25;
+const UIEdgeInsets kNHSearchTextFieldInsets = (UIEdgeInsets) { .left = 25, .right = 20 };
+const CGFloat kNHSearchButtonWidth = 95;
+
 #define SYSTEM_VERSION_LESS_THAN(v) \
 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -20,11 +24,6 @@ pathForResource:name ofType:@"png"]]
 NSLocalizedStringFromTableInBundle(name, \
 table, \
 [NSBundle bundleForClass:[NHSearchController class]], nil)
-
-
-@interface NHSearchTextField ()
-
-@end
 
 @implementation NHSearchTextField
 
@@ -44,19 +43,197 @@ table, \
 }
 @end
 
+
+@interface NHSearchBar ()
+
+@property (nonatomic, strong) NHSearchTextField *textField;
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIButton *button;
+@property (nonatomic, strong) UIView *separator;
+
+@property (nonatomic, strong) NSLayoutConstraint *buttonWidthConstraint;
+
+@end
+
+@implementation NHSearchBar
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    
+    if (self) {
+        [self nhCommonInit];
+    }
+    return self;
+}
+
+- (void)nhCommonInit {
+    self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    self.imageView.backgroundColor = [UIColor clearColor];
+    self.imageView.contentMode = UIViewContentModeRight;
+    self.imageView.image = image(@"NHSearch.icon");
+    
+    self.textField = [[NHSearchTextField alloc] init];
+    self.textField.translatesAutoresizingMaskIntoConstraints = NO;
+    self.textField.backgroundColor = [UIColor whiteColor];
+    self.textField.layer.cornerRadius = 5;
+    self.textField.clipsToBounds = YES;
+    
+    self.textField.placeholder = localization(@"NHSearch.placeholder", @"NHSearch");
+    self.textField.returnKeyType = UIReturnKeySearch;
+    self.textField.textAlignment = NSTextAlignmentLeft;
+    self.textField.leftView = self.imageView;
+    self.textField.textInset = kNHSearchTextFieldInsets;
+    self.textField.leftViewMode = UITextFieldViewModeAlways;
+    self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    [self addSubview:self.textField];
+    
+    
+    self.button = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.button.translatesAutoresizingMaskIntoConstraints = NO;
+    self.button.backgroundColor = [UIColor clearColor];
+    [self.button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.button setTitle:localization(@"NHSearch.close", @"NHSearch") forState:UIControlStateNormal];
+    self.button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    self.button.hidden = YES;
+    self.button.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 0);
+    [self addSubview:self.button];
+    
+    self.separator = [UIView new];
+    self.separator.backgroundColor = [UIColor blackColor];
+    self.separator.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:self.separator];
+    
+    
+    //
+    //
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.textField
+                         attribute:NSLayoutAttributeLeft
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeLeft
+                         multiplier:1.0 constant:7.5]];
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.textField
+                         attribute:NSLayoutAttributeBottom
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeBottom
+                         multiplier:1.0 constant:-7.5]];
+    [self.textField addConstraint:[NSLayoutConstraint constraintWithItem:self.textField
+                                                               attribute:NSLayoutAttributeHeight
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.textField
+                                                               attribute:NSLayoutAttributeHeight
+                                                              multiplier:0 constant:28]];
+    
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.textField
+                         attribute:NSLayoutAttributeRight
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self.button
+                         attribute:NSLayoutAttributeLeft
+                         multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.button
+                         attribute:NSLayoutAttributeRight
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeRight
+                         multiplier:1.0 constant:-7.5]];
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.button
+                         attribute:NSLayoutAttributeBottom
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeBottom
+                         multiplier:1.0 constant:-7.5]];
+    
+    self.buttonWidthConstraint = [NSLayoutConstraint constraintWithItem:self.button
+                                                              attribute:NSLayoutAttributeWidth
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:self.button
+                                                              attribute:NSLayoutAttributeWidth
+                                                             multiplier:0 constant:0];
+    
+    [self.button addConstraint:self.buttonWidthConstraint];
+    [self.button addConstraint:[NSLayoutConstraint constraintWithItem:self.button
+                                                            attribute:NSLayoutAttributeHeight
+                                                            relatedBy:NSLayoutRelationEqual
+                                                               toItem:self.button
+                                                            attribute:NSLayoutAttributeHeight
+                                                           multiplier:0 constant:28]];
+    
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.separator
+                                                     attribute:NSLayoutAttributeBottom
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeBottom
+                                                    multiplier:1.0 constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.separator
+                                                     attribute:NSLayoutAttributeLeft
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeLeft
+                                                    multiplier:1.0 constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.separator
+                                                     attribute:NSLayoutAttributeRight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeRight
+                                                    multiplier:1.0 constant:0]];
+    [self.separator addConstraint:[NSLayoutConstraint constraintWithItem:self.separator
+                                                               attribute:NSLayoutAttributeHeight
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.separator
+                                                               attribute:NSLayoutAttributeHeight
+                                                              multiplier:0 constant:0.5]];
+    
+    [self resetTextInsets];
+    
+}
+
+- (void)resetTextInsets {
+    CGSize size = [self.textField.placeholder
+                   boundingRectWithSize:self.textField.bounds.size
+                   options:NSStringDrawingUsesDeviceMetrics|NSStringDrawingUsesFontLeading
+                   attributes:@{ NSFontAttributeName : self.textField.font ?: [UIFont systemFontOfSize:17]}
+                   context:nil].size;
+
+    CGFloat value = (self.textField.bounds.size.width - size.width) / 2;
+
+    self.textField.textInset = UIEdgeInsetsMake(0, MAX(kNHSearchTextFieldMinLeftInset, value), 0, 20);
+    [self.textField setNeedsLayout];
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    [super willMoveToSuperview:newSuperview];
+}
+
+- (void)didMoveToSuperview {
+    [super didMoveToSuperview];
+    
+    [self resetTextInsets];
+}
+
+- (void)dealloc {
+#ifdef DEBUG
+    NSLog(@"dealloc search bar");
+#endif
+}
+
+@end
+
 @interface NHSearchController ()<UITextFieldDelegate>
 
 @property (nonatomic, weak) UIViewController *container;
 @property (nonatomic, assign) CGRect containerInitialRect;
 @property (nonatomic, assign) CGRect searchBarInitialRect;
 
-@property (nonatomic, strong) NSLayoutConstraint *closeButtonWidth;
-
-@property (nonatomic, strong) UIView *searchBar;
-@property (nonatomic, strong) NHSearchTextField *searchTextField;
-@property (nonatomic, strong) UIImageView *searchLeftImageView;
-@property (nonatomic, strong) UIButton *closeButton;
-@property (nonatomic, strong) UIView *searchBarSeparator;
+@property (nonatomic, strong) NHSearchBar *searchBar;
 
 @property (nonatomic, strong) UIView *searchResultContainer;
 @property (nonatomic, strong) UITableView *searchTableView;
@@ -82,152 +259,16 @@ table, \
     return self;
 }
 
-- (void)resetTextInsets {
-    CGSize size = [self.searchTextField.placeholder
-                   boundingRectWithSize:self.searchTextField.bounds.size
-                   options:NSStringDrawingUsesDeviceMetrics|NSStringDrawingUsesFontLeading
-                   attributes:@{ NSFontAttributeName : self.searchTextField.font ?: [UIFont systemFontOfSize:17]}
-                   context:nil].size;
-    
-    CGFloat value = (self.searchTextField.bounds.size.width - size.width) / 2;
-    
-    self.searchTextField.textInset = UIEdgeInsetsMake(0, MAX(25, value), 0, 20);
-    [self.searchTextField setNeedsLayout];
-}
 
 - (void)nhCommonInit {
     self.containerInitialRect = self.container.view.frame;
     
-    self.searchBar = [[UIView alloc] init];
+    self.searchBar = [[NHSearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 43)];
     self.searchBar.backgroundColor = [UIColor lightGrayColor];
+    self.searchBar.textField.delegate = self;
+    [self.searchBar.button addTarget:self action:@selector(closeButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.searchLeftImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    self.searchLeftImageView.backgroundColor = [UIColor clearColor];
-    self.searchLeftImageView.contentMode = UIViewContentModeRight;
-    self.searchLeftImageView.image = image(@"NHSearch.icon");
-    
-    self.searchTextField = [[NHSearchTextField alloc] init];
-    self.searchTextField.translatesAutoresizingMaskIntoConstraints = NO;
-    self.searchTextField.backgroundColor = [UIColor whiteColor];
-    self.searchTextField.layer.cornerRadius = 5;
-    self.searchTextField.clipsToBounds = YES;
-
-    self.searchTextField.delegate = self;
-    self.searchTextField.placeholder = localization(@"NHSearch.placeholder", @"NHSearch");
-    self.searchTextField.returnKeyType = UIReturnKeySearch;
-    self.searchTextField.textAlignment = NSTextAlignmentLeft;
-    self.searchTextField.leftView = self.searchLeftImageView;
-    self.searchTextField.leftViewMode = UITextFieldViewModeAlways;
-    self.searchTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    [self.searchBar addSubview:self.searchTextField];
-    
-    
-    self.closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
-    self.closeButton.backgroundColor = [UIColor clearColor];
-    [self.closeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.closeButton setTitle:localization(@"NHSearch.close", @"NHSearch") forState:UIControlStateNormal];
-    self.closeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-    [self.closeButton addTarget:self action:@selector(closeButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
-    self.closeButton.hidden = YES;
-    self.closeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 0);
-    [self.searchBar addSubview:self.closeButton];
-    
-    
-    [self.searchBar addConstraint:[NSLayoutConstraint
-                                   constraintWithItem:self.searchTextField
-                                   attribute:NSLayoutAttributeLeft
-                                   relatedBy:NSLayoutRelationEqual
-                                   toItem:self.searchBar
-                                   attribute:NSLayoutAttributeLeft
-                                   multiplier:1.0 constant:7.5]];
-    [self.searchBar addConstraint:[NSLayoutConstraint
-                                   constraintWithItem:self.searchTextField
-                                   attribute:NSLayoutAttributeBottom
-                                   relatedBy:NSLayoutRelationEqual
-                                   toItem:self.searchBar
-                                   attribute:NSLayoutAttributeBottom
-                                   multiplier:1.0 constant:-7.5]];
-    [self.searchTextField addConstraint:[NSLayoutConstraint constraintWithItem:self.searchTextField
-                                                                     attribute:NSLayoutAttributeHeight
-                                                                     relatedBy:NSLayoutRelationEqual
-                                                                        toItem:self.searchTextField
-                                                                     attribute:NSLayoutAttributeHeight
-                                                                    multiplier:0 constant:28]];
-    
-    [self.searchBar addConstraint:[NSLayoutConstraint
-                                   constraintWithItem:self.searchTextField
-                                   attribute:NSLayoutAttributeRight
-                                   relatedBy:NSLayoutRelationEqual
-                                   toItem:self.closeButton
-                                   attribute:NSLayoutAttributeLeft
-                                   multiplier:1.0 constant:0]];
-    [self.searchBar addConstraint:[NSLayoutConstraint
-                                   constraintWithItem:self.closeButton
-                                   attribute:NSLayoutAttributeRight
-                                   relatedBy:NSLayoutRelationEqual
-                                   toItem:self.searchBar
-                                   attribute:NSLayoutAttributeRight
-                                   multiplier:1.0 constant:-7.5]];
-    [self.searchBar addConstraint:[NSLayoutConstraint
-                                   constraintWithItem:self.closeButton
-                                   attribute:NSLayoutAttributeBottom
-                                   relatedBy:NSLayoutRelationEqual
-                                   toItem:self.searchBar
-                                   attribute:NSLayoutAttributeBottom
-                                   multiplier:1.0 constant:-7.5]];
-    
-    self.closeButtonWidth = [NSLayoutConstraint constraintWithItem:self.closeButton
-                                                         attribute:NSLayoutAttributeWidth
-                                                         relatedBy:NSLayoutRelationEqual
-                                                            toItem:self.closeButton
-                                                         attribute:NSLayoutAttributeWidth
-                                                        multiplier:0 constant:0];
-    
-    [self.closeButton addConstraint:self.closeButtonWidth];
-    [self.closeButton addConstraint:[NSLayoutConstraint constraintWithItem:self.closeButton
-                                                                     attribute:NSLayoutAttributeHeight
-                                                                     relatedBy:NSLayoutRelationEqual
-                                                                        toItem:self.closeButton
-                                                                     attribute:NSLayoutAttributeHeight
-                                                                    multiplier:0 constant:28]];
-    
-
-    self.searchBarSeparator = [UIView new];
-    self.searchBarSeparator.backgroundColor = [UIColor blackColor];
-    self.searchBarSeparator.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.searchBar addSubview:self.searchBarSeparator];
-    
-    [self.searchBar addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBarSeparator
-                                                               attribute:NSLayoutAttributeBottom
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self.searchBar
-                                                               attribute:NSLayoutAttributeBottom
-                                                              multiplier:1.0 constant:0]];
-    
-    [self.searchBar addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBarSeparator
-                                                               attribute:NSLayoutAttributeLeft
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self.searchBar
-                                                               attribute:NSLayoutAttributeLeft
-                                                              multiplier:1.0 constant:0]];
-    
-    [self.searchBar addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBarSeparator
-                                                               attribute:NSLayoutAttributeRight
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self.searchBar
-                                                               attribute:NSLayoutAttributeRight
-                                                              multiplier:1.0 constant:0]];
-    [self.searchBarSeparator addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBarSeparator
-                                                               attribute:NSLayoutAttributeHeight
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self.searchBarSeparator
-                                                               attribute:NSLayoutAttributeHeight
-                                                              multiplier:0 constant:0.5]];
-    
-    self.searchBar.frame = CGRectMake(0, 0, 320, 43);
-    
-    [self.searchTextField addObserver:self
+    [self.searchBar.textField addObserver:self
                            forKeyPath:@"text"
                               options:NSKeyValueObservingOptionNew
                               context:nil];
@@ -235,10 +276,10 @@ table, \
     __weak __typeof(self) weakSelf = self;
     self.textChange = [[NSNotificationCenter defaultCenter]
                        addObserverForName:UITextFieldTextDidChangeNotification
-                       object:self.searchTextField
+                       object:self.searchBar.textField
                        queue:nil usingBlock:^(NSNotification *note) {
                            __strong __typeof(weakSelf) strongSelf = weakSelf;
-                           [strongSelf changeText:strongSelf.searchTextField.text];
+                           [strongSelf changeText:strongSelf.searchBar.textField.text];
                        }];
     
     self.searchResultContainer = [UIView new];
@@ -282,7 +323,6 @@ table, \
     
     [self.searchBar setNeedsLayout];
     [self.searchBar layoutIfNeeded];
-    [self resetTextInsets];
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -294,7 +334,7 @@ table, \
 }
 
 - (void)tapGestureAction:(UITapGestureRecognizer*)recognizer {
-    if ([self.searchTextField.text length]) {
+    if ([self.searchBar.textField.text length]) {
         return;
     }
     
@@ -305,7 +345,7 @@ table, \
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context {
-    if (object == self.searchTextField
+    if (object == self.searchBar.textField
         && [keyPath isEqualToString:@"text"]) {
         NSString *newText = change[NSKeyValueChangeNewKey];
         [self changeText:newText];
@@ -359,24 +399,24 @@ table, \
     
     self.searchResultContainer.frame = tableViewRect;
     [self.container.view addSubview:self.searchResultContainer];
-    self.searchTableView.hidden = ![self.searchTextField.text length];
+    self.searchTableView.hidden = ![self.searchBar.textField.text length];
     self.searchResultContainer.alpha = 0;
     
     [self.searchResultContainer setNeedsLayout];
     [self.searchResultContainer layoutIfNeeded];
     
-    self.closeButtonWidth.constant = 95;
-    self.closeButton.hidden = NO;
+    self.searchBar.buttonWidthConstraint.constant = kNHSearchButtonWidth;
+    self.searchBar.button.hidden = NO;
     
     [UIView animateWithDuration:0.3
                           delay:0
                         options:(UIViewAnimationOptionBeginFromCurrentState
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
-                         self.searchTextField.textInset = UIEdgeInsetsMake(0, 25, 0, 20);
+                         self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
                          self.searchBar.frame = newSearchBarFrame;
                          self.container.view.frame = newContainerFrame;
-                         self.searchResultContainer.alpha = ([self.searchTextField.text length] ? 1 : 0.5);
+                         self.searchResultContainer.alpha = ([self.searchBar.textField.text length] ? 1 : 0.5);
                          [self.searchBar layoutIfNeeded];
                      } completion:^(BOOL finished) {
                          
@@ -393,10 +433,10 @@ table, \
     }
     
     self.searchEnabled = NO;
-    self.searchTextField.text = nil;
-    self.closeButtonWidth.constant = 0;
+    self.searchBar.textField.text = nil;
+    self.searchBar.buttonWidthConstraint.constant = 0;
     [self.searchBar endEditing:YES];
-    self.closeButton.hidden = YES;
+    self.searchBar.button.hidden = YES;
     
     [UIView animateWithDuration:0.3
                           delay:0
@@ -404,7 +444,7 @@ table, \
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
                          self.searchBar.frame = self.searchBarInitialRect;
-                         [self resetTextInsets];
+                         [self.searchBar resetTextInsets];
                          self.container.view.frame = self.containerInitialRect;
                          [self.searchBar layoutIfNeeded];
                          self.searchResultContainer.alpha = 0;
@@ -430,7 +470,7 @@ table, \
     
     [self.searchResultContainer removeFromSuperview];
     
-    [self.searchTextField removeObserver:self
+    [self.searchBar.textField removeObserver:self
                               forKeyPath:@"text"];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self.textChange];

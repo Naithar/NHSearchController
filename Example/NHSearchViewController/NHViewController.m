@@ -11,6 +11,7 @@
 
 @interface NHViewController ()
 
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NHSearchController *nhSearchController;
 @end
 
@@ -22,10 +23,7 @@
 	
     self.nhSearchController = [[NHSearchController alloc] initWithContainerViewController:self.navigationController];
     
-    CGRect frame = self.nhSearchController.searchBar.frame;
-    frame.origin = CGPointMake(0, 100);
-    self.nhSearchController.searchBar.frame = frame;
-    [self.view addSubview:self.nhSearchController.searchBar];
+    self.tableView.tableHeaderView = self.nhSearchController.searchBar;
 }
 
 - (void)didReceiveMemoryWarning

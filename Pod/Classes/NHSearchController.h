@@ -8,11 +8,22 @@
 
 @import UIKit;
 
+extern const CGFloat kNHSearchTextFieldMinLeftInset;
+extern const UIEdgeInsets kNHSearchTextFieldInsets;
+extern const CGFloat kNHSearchButtonWidth;
+
 @class NHSearchController;
 
 @interface NHSearchTextField : UITextField
-
 @property (nonatomic, assign) UIEdgeInsets textInset;
+@end
+
+@interface NHSearchBar : UIView
+
+@property (nonatomic, readonly, strong) NHSearchTextField *textField;
+@property (nonatomic, readonly, strong) UIImageView *imageView;
+@property (nonatomic, readonly, strong) UIButton *button;
+@property (nonatomic, readonly, strong) UIView *separator;
 
 @end
 
@@ -29,11 +40,7 @@
 
 @property (nonatomic, weak) id<NHSearchControllerDelegate> nhDelegate;
 
-@property (nonatomic, readonly, strong) UIView *searchBar;
-@property (nonatomic, readonly, strong) NHSearchTextField *searchTextField;
-@property (nonatomic, readonly, strong) UIImageView *searchLeftImageView;
-@property (nonatomic, readonly, strong) UIButton *closeButton;
-@property (nonatomic, readonly, strong) UIView *searchBarSeparator;
+@property (nonatomic, readonly, strong) NHSearchBar *searchBar;
 
 @property (nonatomic, readonly, strong) UIView *searchResultContainer;
 @property (nonatomic, readonly, strong) UITableView *searchTableView;

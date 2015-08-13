@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--title-->
@@ -18,19 +17,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sJI-wb-I6O">
-                                <rect key="frame" x="0.0" y="8" width="600" height="44"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="caF-jj-dty">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="sJI-wb-I6O" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="8" id="3w5-hl-SWp"/>
-                            <constraint firstItem="sJI-wb-I6O" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leadingMargin" constant="-16" id="6yX-02-Z0E"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="sJI-wb-I6O" secondAttribute="trailing" constant="-16" id="TWP-Ee-Jbg"/>
+                            <constraint firstItem="caF-jj-dty" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leading" id="ImV-7s-3Nd"/>
+                            <constraint firstItem="Mvr-aV-6Um" firstAttribute="top" secondItem="caF-jj-dty" secondAttribute="bottom" id="lnW-cE-CHr"/>
+                            <constraint firstItem="caF-jj-dty" firstAttribute="top" secondItem="TpU-gO-2f1" secondAttribute="top" id="tpm-U5-oEK"/>
+                            <constraint firstAttribute="trailing" secondItem="caF-jj-dty" secondAttribute="trailing" id="x20-B2-vS4"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="title" id="JAr-hY-HjT"/>
+                    <connections>
+                        <outlet property="tableView" destination="caF-jj-dty" id="AUN-7d-PSO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tc2-Qw-aMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
