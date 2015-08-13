@@ -103,9 +103,6 @@ table, \
     self.separator.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.separator];
     
-    
-    //
-    //
     [self addConstraint:[NSLayoutConstraint
                          constraintWithItem:self.textField
                          attribute:NSLayoutAttributeLeft
@@ -120,12 +117,13 @@ table, \
                          toItem:self
                          attribute:NSLayoutAttributeBottom
                          multiplier:1.0 constant:-7.5]];
-    [self.textField addConstraint:[NSLayoutConstraint constraintWithItem:self.textField
-                                                               attribute:NSLayoutAttributeHeight
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self.textField
-                                                               attribute:NSLayoutAttributeHeight
-                                                              multiplier:0 constant:28]];
+    [self.textField addConstraint:[NSLayoutConstraint
+                                   constraintWithItem:self.textField
+                                   attribute:NSLayoutAttributeHeight
+                                   relatedBy:NSLayoutRelationEqual
+                                   toItem:self.textField
+                                   attribute:NSLayoutAttributeHeight
+                                   multiplier:0 constant:28]];
     
     [self addConstraint:[NSLayoutConstraint
                          constraintWithItem:self.textField
@@ -134,13 +132,16 @@ table, \
                          toItem:self.button
                          attribute:NSLayoutAttributeLeft
                          multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint
-                         constraintWithItem:self.button
-                         attribute:NSLayoutAttributeRight
-                         relatedBy:NSLayoutRelationEqual
-                         toItem:self
-                         attribute:NSLayoutAttributeRight
-                         multiplier:1.0 constant:-7.5]];
+    NSLayoutConstraint *buttonRightConstraint = [NSLayoutConstraint
+                                                 constraintWithItem:self.button
+                                                 attribute:NSLayoutAttributeRight
+                                                 relatedBy:NSLayoutRelationEqual
+                                                 toItem:self
+                                                 attribute:NSLayoutAttributeRight
+                                                 multiplier:1.0 constant:-7.5];
+    buttonRightConstraint.priority = UILayoutPriorityDefaultHigh;
+    [self addConstraint:buttonRightConstraint];
+    
     [self addConstraint:[NSLayoutConstraint
                          constraintWithItem:self.button
                          attribute:NSLayoutAttributeBottom
@@ -149,48 +150,55 @@ table, \
                          attribute:NSLayoutAttributeBottom
                          multiplier:1.0 constant:-7.5]];
     
-    self.buttonWidthConstraint = [NSLayoutConstraint constraintWithItem:self.button
-                                                              attribute:NSLayoutAttributeWidth
-                                                              relatedBy:NSLayoutRelationEqual
-                                                                 toItem:self.button
-                                                              attribute:NSLayoutAttributeWidth
-                                                             multiplier:0 constant:0];
+    self.buttonWidthConstraint = [NSLayoutConstraint
+                                  constraintWithItem:self.button
+                                  attribute:NSLayoutAttributeWidth
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:self.button
+                                  attribute:NSLayoutAttributeWidth
+                                  multiplier:0 constant:0];
     
     [self.button addConstraint:self.buttonWidthConstraint];
-    [self.button addConstraint:[NSLayoutConstraint constraintWithItem:self.button
-                                                            attribute:NSLayoutAttributeHeight
-                                                            relatedBy:NSLayoutRelationEqual
-                                                               toItem:self.button
-                                                            attribute:NSLayoutAttributeHeight
-                                                           multiplier:0 constant:28]];
+    [self.button addConstraint:[NSLayoutConstraint
+                                constraintWithItem:self.button
+                                attribute:NSLayoutAttributeHeight
+                                relatedBy:NSLayoutRelationEqual
+                                toItem:self.button
+                                attribute:NSLayoutAttributeHeight
+                                multiplier:0 constant:28]];
     
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.separator
-                                                     attribute:NSLayoutAttributeBottom
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeBottom
-                                                    multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.separator
+                         attribute:NSLayoutAttributeBottom
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeBottom
+                         multiplier:1.0 constant:0]];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.separator
-                                                     attribute:NSLayoutAttributeLeft
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeLeft
-                                                    multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.separator
+                         attribute:NSLayoutAttributeLeft
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeLeft
+                         multiplier:1.0 constant:0]];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.separator
-                                                     attribute:NSLayoutAttributeRight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeRight
-                                                    multiplier:1.0 constant:0]];
-    [self.separator addConstraint:[NSLayoutConstraint constraintWithItem:self.separator
-                                                               attribute:NSLayoutAttributeHeight
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self.separator
-                                                               attribute:NSLayoutAttributeHeight
-                                                              multiplier:0 constant:0.5]];
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.separator
+                         attribute:NSLayoutAttributeRight
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeRight
+                         multiplier:1.0 constant:0]];
+    
+    [self.separator addConstraint:[NSLayoutConstraint
+                                   constraintWithItem:self.separator
+                                   attribute:NSLayoutAttributeHeight
+                                   relatedBy:NSLayoutRelationEqual
+                                   toItem:self.separator
+                                   attribute:NSLayoutAttributeHeight
+                                   multiplier:0 constant:0.5]];
     
     [self resetTextInsets];
     
@@ -202,9 +210,9 @@ table, \
                    options:NSStringDrawingUsesDeviceMetrics|NSStringDrawingUsesFontLeading
                    attributes:@{ NSFontAttributeName : self.textField.font ?: [UIFont systemFontOfSize:17]}
                    context:nil].size;
-
+    
     CGFloat value = (self.textField.bounds.size.width - size.width) / 2;
-
+    
     self.textField.textInset = UIEdgeInsetsMake(0, MAX(kNHSearchTextFieldMinLeftInset, value), 0, 20);
     [self.textField setNeedsLayout];
 }
@@ -218,6 +226,20 @@ table, \
     
     [self resetTextInsets];
 }
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
+    
+    [self resetTextInsets];
+}
+
+- (void)setBounds:(CGRect)bounds {
+    [super setBounds:bounds];
+}
+
 
 - (void)dealloc {
 #ifdef DEBUG
@@ -269,9 +291,9 @@ table, \
     [self.searchBar.button addTarget:self action:@selector(closeButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.searchBar.textField addObserver:self
-                           forKeyPath:@"text"
-                              options:NSKeyValueObservingOptionNew
-                              context:nil];
+                               forKeyPath:@"text"
+                                  options:NSKeyValueObservingOptionNew
+                                  context:nil];
     
     __weak __typeof(self) weakSelf = self;
     self.textChange = [[NSNotificationCenter defaultCenter]
@@ -413,8 +435,8 @@ table, \
                         options:(UIViewAnimationOptionBeginFromCurrentState
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
-                         self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
                          self.searchBar.frame = newSearchBarFrame;
+                         self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
                          self.container.view.frame = newContainerFrame;
                          self.searchResultContainer.alpha = ([self.searchBar.textField.text length] ? 1 : 0.5);
                          [self.searchBar layoutIfNeeded];
@@ -444,7 +466,6 @@ table, \
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
                          self.searchBar.frame = self.searchBarInitialRect;
-                         [self.searchBar resetTextInsets];
                          self.container.view.frame = self.containerInitialRect;
                          [self.searchBar layoutIfNeeded];
                          self.searchResultContainer.alpha = 0;
@@ -471,7 +492,7 @@ table, \
     [self.searchResultContainer removeFromSuperview];
     
     [self.searchBar.textField removeObserver:self
-                              forKeyPath:@"text"];
+                                  forKeyPath:@"text"];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self.textChange];
 }
