@@ -333,7 +333,7 @@ table, \
     [self.searchResultContainer setNeedsLayout];
     [self.searchResultContainer layoutIfNeeded];
     
-    self.closeButtonWidth.constant = 80;
+    self.closeButtonWidth.constant = 95;
     self.closeButton.hidden = NO;
     
     [UIView animateWithDuration:0.3
