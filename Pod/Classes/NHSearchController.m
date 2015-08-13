@@ -102,6 +102,7 @@ table, \
     
     self.searchLeftImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     self.searchLeftImageView.backgroundColor = [UIColor whiteColor];
+    self.searchLeftImageView.contentMode = UIViewContentModeRight;
     self.searchLeftImageView.image = image(@"NHSearch.icon");
     
     self.searchTextField = [[NHSearchTextField alloc] init];
