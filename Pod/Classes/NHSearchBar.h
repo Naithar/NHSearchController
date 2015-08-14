@@ -23,5 +23,6 @@ extern const CGFloat kNHSearchButtonWidth;
 
 
 - (void)setCloseButtonHidden:(BOOL)hidden;
+- (void)resetTextInsets:(BOOL)force;
 
 @end

@@ -218,11 +218,16 @@ const CGFloat kNHSearchButtonWidth = 95;
                                       attribute:NSLayoutAttributeHeight
                                       multiplier:0 constant:0.5]];
     
-    [self resetTextInsets];
+    [self resetTextInsets:YES];
     
 }
 
-- (void)resetTextInsets {
+- (void)resetTextInsets:(BOOL)force {
+    if (UIEdgeInsetsEqualToEdgeInsets(self.textField.textInset, kNHSearchTextFieldInsets)
+        && !force) {
+        return;
+    }
+    
     CGSize size = [self.textField.placeholder
                    boundingRectWithSize:self.textField.bounds.size
                    options:NSStringDrawingUsesDeviceMetrics|NSStringDrawingUsesFontLeading
@@ -242,7 +247,7 @@ const CGFloat kNHSearchButtonWidth = 95;
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
     
-    [self resetTextInsets];
+    [self resetTextInsets:YES];
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -251,7 +256,7 @@ const CGFloat kNHSearchButtonWidth = 95;
     [self setNeedsLayout];
     [self layoutIfNeeded];
     
-    [self resetTextInsets];
+    [self resetTextInsets:NO];
 }
 
 - (void)setBounds:(CGRect)bounds {

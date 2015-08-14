@@ -19,6 +19,7 @@
 @property (nonatomic, weak) UIViewController *container;
 @property (nonatomic, assign) CGRect containerInitialRect;
 @property (nonatomic, assign) CGRect searchBarInitialRect;
+@property (nonatomic, assign) CGRect searchBarContainerInitialRect;
 
 @property (nonatomic, strong) NHSearchBar *searchBar;
 
@@ -30,6 +31,7 @@
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 
+@property (nonatomic, weak) UIView *initialSearchBarSuperview;
 @end
 
 @implementation NHSearchController
@@ -47,6 +49,8 @@
 
 
 - (void)nhCommonInit {
+    self.containerInitialRect = self.container.view.frame;
+    
     self.searchBar = [[NHSearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     self.searchBar.backgroundColor = [UIColor lightGrayColor];
     self.searchBar.textField.delegate = self;
@@ -122,8 +126,6 @@
         return;
     }
     
-    self.containerInitialRect = self.container.view.frame;
-    
     self.searchEnabled = YES;
     
     [self showSearch];
@@ -131,61 +133,6 @@
     if ([self.nhDelegate respondsToSelector:@selector(nhSearchControllerDidBegin:)]) {
         [self.nhDelegate nhSearchControllerDidBegin:self];
     }
-}
-
-- (void)showSearch {
-    if (!self.searchEnabled) {
-        return;
-    }
-    
-    CGRect newContainerFrame = self.container.view.frame;
-    CGRect newSearchBarFrame = self.searchBar.frame;
-    self.searchBarInitialRect = self.searchBar.frame;
-    
-    if (self.shouldOffsetStatusBar) {
-        CGFloat statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
-        newSearchBarFrame.size.height += statusBarHeight;
-        
-        if (SYSTEM_VERSION_LESS_THAN(@"8.0")) {
-            newSearchBarFrame.origin.y += statusBarHeight;
-        }
-    }
-    
-    CGFloat offset = [self.searchBar
-                      convertRect:(CGRect) { .size = newSearchBarFrame.size }
-                      toView:self.container.view].origin.y;
-    
-    newContainerFrame.origin.y -= offset;
-    newContainerFrame.size.height += offset;
-    
-    CGRect tableViewRect = (CGRect) { .size = self.containerInitialRect.size };
-    tableViewRect.origin.y = offset + newSearchBarFrame.size.height;
-    tableViewRect.size.height -= newSearchBarFrame.size.height;
-    
-    self.searchResultView.frame = tableViewRect;
-    [self.container.view addSubview:self.searchResultView];
-    self.searchResultView.tableView.hidden = ![self.searchBar.textField.text length];
-    self.searchResultView.alpha = 0;
-    
-    [self.searchResultView setNeedsLayout];
-    [self.searchResultView layoutIfNeeded];
-    
-    [self.searchBar setCloseButtonHidden:NO];
-    [self.searchBar.superview bringSubviewToFront:self.searchBar];
-    
-    [UIView animateWithDuration:0.3
-                          delay:0
-                        options:(UIViewAnimationOptionBeginFromCurrentState
-                                 |UIViewAnimationCurveEaseIn)
-                     animations:^{
-                         self.searchBar.frame = newSearchBarFrame;
-                         self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
-                         self.container.view.frame = newContainerFrame;
-                         self.searchResultView.alpha = ([self.searchBar.textField.text length] ? 1 : 0.5);
-                         [self.searchBar layoutIfNeeded];
-                     } completion:^(BOOL finished) {
-                         
-                     }];
 }
 
 - (void)stopSearch {
@@ -197,11 +144,17 @@
     self.searchBar.textField.text = nil;
     [self.searchBar setCloseButtonHidden:YES];
     
+    
     [self hideSearch];
     
     if ([self.nhDelegate respondsToSelector:@selector(nhSearchControllerDidEnd:)]) {
         [self.nhDelegate nhSearchControllerDidEnd:self];
     }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
 }
 
 - (void)hideSearch {
@@ -217,19 +170,72 @@
                         options:(UIViewAnimationOptionBeginFromCurrentState
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
-                         self.searchBar.frame = self.searchBarInitialRect;
-                         self.container.view.frame = self.containerInitialRect;
+                         self.searchBar.frame = self.searchBarContainerInitialRect;
+                         [self.searchBar resetTextInsets:YES];
                          [self.searchBar layoutIfNeeded];
                          self.searchResultView.alpha = 0;
                      } completion:^(BOOL finished) {
                          [self.searchResultView removeFromSuperview];
                          
+                         //                         [self.searchBar removeFromSuperview];
+                         self.searchBar.frame = self.searchBarInitialRect;
+                         [self.initialSearchBarSuperview addSubview:self.searchBar];
                      }];
 }
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    return YES;
+- (void)showSearch {
+    
+    if (!self.searchEnabled) {
+        return;
+    }
+    
+    self.searchBarInitialRect = self.searchBar.frame;
+    self.initialSearchBarSuperview = self.searchBar.superview;
+    
+    self.searchBarContainerInitialRect = [self.searchBar convertRect:self.searchBar.bounds toView:self.container.view];
+    CGRect newSearchBarFrame = self.searchBarContainerInitialRect;
+    CGRect newContainerFrame = self.container.view.frame;
+    
+    self.searchBar.frame = newSearchBarFrame;
+    [self.container.view addSubview:self.searchBar];
+    [self.container.view addSubview:self.searchResultView];
+    [self.container.view bringSubviewToFront:self.searchBar];
+    
+    
+    if (self.shouldOffsetStatusBar) {
+        CGFloat statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
+        newSearchBarFrame.size.height += statusBarHeight;
+        
+    }
+    
+    newSearchBarFrame.origin.y = 0;
+    
+    newContainerFrame.origin.y = newSearchBarFrame.size.height;
+    newContainerFrame.size.height -= newSearchBarFrame.size.height;
+    self.searchResultView.tableView.hidden = ![self.searchBar.textField.text length];
+    self.searchResultView.alpha = 0;
+    self.searchResultView.frame = newContainerFrame;
+    [self.searchResultView setNeedsLayout];
+    [self.searchResultView layoutIfNeeded];
+    
+    [self.searchBar setCloseButtonHidden:NO];
+    [self.searchBar.superview bringSubviewToFront:self.searchBar];
+    
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:(UIViewAnimationOptionBeginFromCurrentState
+                                 |UIViewAnimationCurveEaseIn)
+                     animations:^{
+                         self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
+                         self.searchResultView.alpha = ([self.searchBar.textField.text length] ? 1 : 0.5);
+                         [self.searchBar layoutIfNeeded];
+                     } completion:^(BOOL finished) {
+                         
+                     }];
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.searchBar.frame = newSearchBarFrame;
+        self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
+    }];
 }
 
 - (void)dealloc {
