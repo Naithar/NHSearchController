@@ -32,7 +32,6 @@
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 
 @property (nonatomic, weak) UIView *initialSearchBarSuperview;
-
 @end
 
 @implementation NHSearchController
@@ -148,10 +147,6 @@
     
     [self hideSearch];
     
-    [UIView animateWithDuration:0.3 animations:^{
-        [self.searchBar resetTextInsets:YES];
-    }];
-    
     if ([self.nhDelegate respondsToSelector:@selector(nhSearchControllerDidEnd:)]) {
         [self.nhDelegate nhSearchControllerDidEnd:self];
     }
@@ -179,6 +174,7 @@
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
                          self.searchBar.frame = self.searchBarContainerInitialRect;
+                         [self.searchBar resetTextInsets:YES];
                          self.searchResultView.frame = resultFrame;
                          [self.searchBar layoutIfNeeded];
                          self.searchResultView.alpha = 0;
