@@ -36,4 +36,6 @@
 
 - (instancetype)initWithContainerViewController:(UIViewController*)container;
 
+- (void)hideSearch;
+- (void)showSearch;
 @end

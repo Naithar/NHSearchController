@@ -47,9 +47,7 @@
 
 
 - (void)nhCommonInit {
-    self.containerInitialRect = self.container.view.frame;
-    
-    self.searchBar = [[NHSearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 43)];
+    self.searchBar = [[NHSearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     self.searchBar.backgroundColor = [UIColor lightGrayColor];
     self.searchBar.textField.delegate = self;
     [self.searchBar.button addTarget:self action:@selector(closeButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
@@ -124,7 +122,21 @@
         return;
     }
     
+    self.containerInitialRect = self.container.view.frame;
+    
     self.searchEnabled = YES;
+    
+    [self showSearch];
+    
+    if ([self.nhDelegate respondsToSelector:@selector(nhSearchControllerDidBegin:)]) {
+        [self.nhDelegate nhSearchControllerDidBegin:self];
+    }
+}
+
+- (void)showSearch {
+    if (!self.searchEnabled) {
+        return;
+    }
     
     CGRect newContainerFrame = self.container.view.frame;
     CGRect newSearchBarFrame = self.searchBar.frame;
@@ -174,10 +186,6 @@
                      } completion:^(BOOL finished) {
                          
                      }];
-    
-    if ([self.nhDelegate respondsToSelector:@selector(nhSearchControllerDidBegin:)]) {
-        [self.nhDelegate nhSearchControllerDidBegin:self];
-    }
 }
 
 - (void)stopSearch {
@@ -188,7 +196,21 @@
     self.searchEnabled = NO;
     self.searchBar.textField.text = nil;
     [self.searchBar setCloseButtonHidden:YES];
-    [self.searchBar endEditing:YES];
+    
+    [self hideSearch];
+    
+    if ([self.nhDelegate respondsToSelector:@selector(nhSearchControllerDidEnd:)]) {
+        [self.nhDelegate nhSearchControllerDidEnd:self];
+    }
+}
+
+- (void)hideSearch {
+    if (CGRectEqualToRect(CGRectZero, self.containerInitialRect)
+        || CGRectEqualToRect(CGRectZero, self.searchBarInitialRect)) {
+        return;
+    }
+    
+    [self.searchBar.textField resignFirstResponder];
     
     [UIView animateWithDuration:0.3
                           delay:0
@@ -203,10 +225,6 @@
                          [self.searchResultView removeFromSuperview];
                          
                      }];
-    
-    if ([self.nhDelegate respondsToSelector:@selector(nhSearchControllerDidEnd:)]) {
-        [self.nhDelegate nhSearchControllerDidEnd:self];
-    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
