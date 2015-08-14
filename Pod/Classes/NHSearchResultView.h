@@ -10,6 +10,9 @@
 
 @interface NHSearchResultView : UIView
 
+@property (nonatomic, strong) UIColor *overlayColor;
 @property (nonatomic, readonly, strong) UITableView *tableView;
+
+- (void)getSnapshotForView:(UIView*)view withRect:(CGRect)rect;
 
 @end

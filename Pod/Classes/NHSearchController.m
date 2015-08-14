@@ -71,7 +71,8 @@
                        }];
     
     self.searchResultView = [[NHSearchResultView alloc] init];
-    self.searchResultView.backgroundColor = [UIColor grayColor];
+    self.searchResultView.backgroundColor = [UIColor whiteColor];
+    self.searchResultView.overlayColor = [UIColor grayColor];
     
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)];
     [self.searchResultView addGestureRecognizer:self.tapGesture];
@@ -112,7 +113,7 @@
         return;
     }
     
-    self.searchResultView.alpha = ([text length] ? 1 : 0.5);
+    self.searchResultView.alpha = 1;//([text length] ? 1 : 0.5);
     self.searchResultView.tableView.hidden = ![text length];
     
     if ([self.nhDelegate respondsToSelector:@selector(nhSearchController:didChangeText:)]) {
@@ -178,6 +179,7 @@
                          self.searchResultView.frame = resultFrame;
                          [self.searchBar layoutIfNeeded];
                          self.searchResultView.alpha = 0;
+                         self.initialSearchBarSuperview.alpha = 1;
                      } completion:^(BOOL finished) {
                          [self.searchResultView removeFromSuperview];
                          self.searchBar.frame = self.searchBarInitialRect;
@@ -192,6 +194,11 @@
     
     self.searchBarInitialRect = self.searchBar.frame;
     self.initialSearchBarSuperview = self.searchBar.superview;
+    
+    CGRect shapshotRect = self.initialSearchBarSuperview.bounds;
+    shapshotRect.origin.y = CGRectGetMaxY(self.searchBarInitialRect);
+//    shapshotRect.size.height -= CGRectGetMaxY(self.searchBarInitialRect);
+    [self.searchResultView getSnapshotForView:self.initialSearchBarSuperview withRect:shapshotRect];
     
     self.searchBarContainerInitialRect = [self.searchBar convertRect:self.searchBar.bounds toView:self.container.view];
     CGRect newSearchBarFrame = self.searchBarContainerInitialRect;
@@ -229,7 +236,8 @@
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
                          self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
-                         self.searchResultView.alpha = ([self.searchBar.textField.text length] ? 1 : 0.5);
+                         self.searchResultView.alpha = 1;//([self.searchBar.textField.text length] ? 1 : 0.5);
+                         self.initialSearchBarSuperview.alpha = 0;
                          [self.searchBar layoutIfNeeded];
                      } completion:^(BOOL finished) {
                          

@@ -11,6 +11,7 @@
 @interface NHSearchResultView ()
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIImage *image;
 
 @end
 
@@ -23,6 +24,29 @@
         [self nhCommonInit];
     }
     return self;
+}
+
+- (void)drawRect:(CGRect)rect {
+    [self.image drawInRect:CGRectMake(rect.origin.x, rect.origin.y, self.image.size.width, self.image.size.height)];
+    
+    [[(self.overlayColor ?: [UIColor blackColor]) colorWithAlphaComponent:0.5] set];
+    
+    [[UIBezierPath bezierPathWithRect:rect] fill];
+}
+
+- (void)getSnapshotForView:(UIView*)view withRect:(CGRect)rect {
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextConcatCTM(context,
+                       CGAffineTransformMakeTranslation(
+                                                        -rect.origin.x,
+                                                        -rect.origin.y));
+    
+    [view.layer renderInContext:context];
+    
+    self.image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
 }
 
 - (void)nhCommonInit {
