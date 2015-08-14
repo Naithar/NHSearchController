@@ -17,7 +17,7 @@
 @interface NHSearchController ()<UITextFieldDelegate>
 
 @property (nonatomic, weak) UIViewController *container;
-@property (nonatomic, assign) CGRect containerInitialRect;
+//@property (nonatomic, assign) CGRect containerInitialRect;
 @property (nonatomic, assign) CGRect searchBarInitialRect;
 @property (nonatomic, assign) CGRect searchBarContainerInitialRect;
 
@@ -32,6 +32,7 @@
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 
 @property (nonatomic, weak) UIView *initialSearchBarSuperview;
+
 @end
 
 @implementation NHSearchController
@@ -49,7 +50,7 @@
 
 
 - (void)nhCommonInit {
-    self.containerInitialRect = self.container.view.frame;
+    //    self.containerInitialRect = self.container.view.frame;
     
     self.searchBar = [[NHSearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     self.searchBar.backgroundColor = [UIColor lightGrayColor];
@@ -147,6 +148,10 @@
     
     [self hideSearch];
     
+    [UIView animateWithDuration:0.3 animations:^{
+        [self.searchBar resetTextInsets:YES];
+    }];
+    
     if ([self.nhDelegate respondsToSelector:@selector(nhSearchControllerDidEnd:)]) {
         [self.nhDelegate nhSearchControllerDidEnd:self];
     }
@@ -158,12 +163,15 @@
 }
 
 - (void)hideSearch {
-    if (CGRectEqualToRect(CGRectZero, self.containerInitialRect)
-        || CGRectEqualToRect(CGRectZero, self.searchBarInitialRect)) {
+    if (CGRectEqualToRect(CGRectZero, self.searchBarInitialRect)) {
         return;
     }
     
     [self.searchBar.textField resignFirstResponder];
+    
+    CGRect resultFrame = self.searchResultView.frame;
+    
+    resultFrame.origin.y = CGRectGetMaxY(self.searchBarContainerInitialRect);
     
     [UIView animateWithDuration:0.3
                           delay:0
@@ -171,13 +179,11 @@
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
                          self.searchBar.frame = self.searchBarContainerInitialRect;
-                         [self.searchBar resetTextInsets:YES];
+                         self.searchResultView.frame = resultFrame;
                          [self.searchBar layoutIfNeeded];
                          self.searchResultView.alpha = 0;
                      } completion:^(BOOL finished) {
                          [self.searchResultView removeFromSuperview];
-                         
-                         //                         [self.searchBar removeFromSuperview];
                          self.searchBar.frame = self.searchBarInitialRect;
                          [self.initialSearchBarSuperview addSubview:self.searchBar];
                      }];
@@ -207,9 +213,7 @@
         
     }
     
-    newSearchBarFrame.origin.y = 0;
-    
-    newContainerFrame.origin.y = newSearchBarFrame.size.height;
+    newContainerFrame.origin.y = CGRectGetMaxY(newSearchBarFrame);
     newContainerFrame.size.height -= newSearchBarFrame.size.height;
     self.searchResultView.tableView.hidden = ![self.searchBar.textField.text length];
     self.searchResultView.alpha = 0;
@@ -219,6 +223,9 @@
     
     [self.searchBar setCloseButtonHidden:NO];
     [self.searchBar.superview bringSubviewToFront:self.searchBar];
+    
+    newSearchBarFrame.origin.y = 0;
+    newContainerFrame.origin.y = CGRectGetMaxY(newSearchBarFrame);
     
     [UIView animateWithDuration:0.3
                           delay:0
@@ -235,6 +242,8 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.searchBar.frame = newSearchBarFrame;
         self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
+        self.searchResultView.frame = newContainerFrame;
+        [self.searchResultView layoutIfNeeded];
     }];
 }
 
@@ -243,6 +252,7 @@
     NSLog(@"dealloc search");
 #endif
     
+    [self.searchBar removeFromSuperview];
     [self.searchResultView removeFromSuperview];
     
     [self.searchBar.textField removeObserver:self
