@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "NHSearchController"
-  s.version          = "0.6.0"
+  s.version          = "0.6.2"
   s.summary          = "custom search view with result table view"
   s.homepage         = "https://github.com/naithar/NHSearchController"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
