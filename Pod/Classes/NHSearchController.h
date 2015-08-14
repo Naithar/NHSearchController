@@ -30,6 +30,8 @@
 
 @property (nonatomic, readonly, strong) NHSearchResultView *searchResultView;
 
+@property (nonatomic, readonly, assign) BOOL searchEnabled;
+
 @property (nonatomic, assign) BOOL shouldOffsetStatusBar;
 
 - (instancetype)initWithContainerViewController:(UIViewController*)container;
