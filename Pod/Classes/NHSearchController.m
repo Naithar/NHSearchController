@@ -14,7 +14,7 @@
 
 
 
-@interface NHSearchController ()<UITextFieldDelegate>
+@interface NHSearchController ()<UITextFieldDelegate, NHSearchTextFieldDelegate>
 
 @property (nonatomic, weak) UIViewController *container;
 @property (nonatomic, weak) UIView *searchBackgroundView;
@@ -27,8 +27,6 @@
 @property (nonatomic, strong) NHSearchResultView *searchResultView;
 
 @property (nonatomic, assign) BOOL searchEnabled;
-
-@property (nonatomic, strong) id textChange;
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 
@@ -62,21 +60,8 @@
     self.searchBar = [[NHSearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     self.searchBar.backgroundColor = [UIColor lightGrayColor];
     self.searchBar.textField.delegate = self;
+    self.searchBar.textField.nhDelegate = self;
     [self.searchBar.button addTarget:self action:@selector(closeButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.searchBar.textField addObserver:self
-                               forKeyPath:@"text"
-                                  options:NSKeyValueObservingOptionNew
-                                  context:nil];
-    
-    __weak __typeof(self) weakSelf = self;
-    self.textChange = [[NSNotificationCenter defaultCenter]
-                       addObserverForName:UITextFieldTextDidChangeNotification
-                       object:self.searchBar.textField
-                       queue:nil usingBlock:^(NSNotification *note) {
-                           __strong __typeof(weakSelf) strongSelf = weakSelf;
-                           [strongSelf changeText:strongSelf.searchBar.textField.text];
-                       }];
     
     self.searchResultView = [[NHSearchResultView alloc] initWithBackgroundView:self.searchBackgroundView];
     self.searchResultView.backgroundColor = self.searchBackgroundView ? [UIColor whiteColor] : [UIColor clearColor];
@@ -103,17 +88,6 @@
     }
     
     [self stopSearch];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary *)change
-                       context:(void *)context {
-    if (object == self.searchBar.textField
-        && [keyPath isEqualToString:@"text"]) {
-        NSString *newText = change[NSKeyValueChangeNewKey];
-        [self changeText:newText];
-    }
 }
 
 - (void)changeText:(NSString*)text {
@@ -263,6 +237,10 @@
     }];
 }
 
+- (void)nhSearchTextField:(NHSearchTextField *)textField didChangeText:(NSString *)text {
+    [self changeText:text];
+}
+
 - (void)dealloc {
 #ifdef DEBUG
     NSLog(@"dealloc search");
@@ -270,11 +248,6 @@
     
     [self.searchBar removeFromSuperview];
     [self.searchResultView removeFromSuperview];
-    
-    [self.searchBar.textField removeObserver:self
-                                  forKeyPath:@"text"];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self.textChange];
 }
 
 @end

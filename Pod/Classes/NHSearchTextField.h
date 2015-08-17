@@ -13,8 +13,17 @@ extern const CGFloat kNHSearchTextFieldMinLeftInset;
 extern const UIEdgeInsets kNHSearchTextFieldInsets;
 extern const CGFloat kNHSearchButtonWidth;
 
+@class NHSearchTextField;
+
+@protocol NHSearchTextFieldDelegate <NSObject>
+
+@optional
+- (void)nhSearchTextField:(NHSearchTextField*)textField didChangeText:(NSString*)text;
+
+@end
 @interface NHSearchTextField : UITextField
 
+@property (nonatomic, weak) id<NHSearchTextFieldDelegate> nhDelegate;
 @property (nonatomic, assign) UIEdgeInsets textInset;
 
 - (void)resetTextInsets:(BOOL)force;
