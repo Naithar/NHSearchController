@@ -121,7 +121,7 @@ const CGFloat kNHSearchTextFieldMinLeftInset = 5;
             
             CGFloat value = (self.bounds.size.width - size.width) / 2;
             
-            self.textInset = UIEdgeInsetsMake(0, MAX(kNHSearchTextFieldMinLeftInset, value), 0, 20);
+            self.textInset = UIEdgeInsetsMake(0, MAX((self.leftView ? self.leftView.bounds.size.width : 0) + kNHSearchTextFieldMinLeftInset, value), 0, 20);
         } break;
     }
     [self setNeedsLayout];
