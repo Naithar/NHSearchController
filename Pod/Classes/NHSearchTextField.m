@@ -100,6 +100,9 @@ const CGFloat kNHSearchButtonWidth = 95;
 }
 
 - (void)dealloc {
+#ifdef DEBUG
+    NSLog(@"dealloc search text field");
+#endif
     self.nhDelegate = nil;
     self.delegate = nil;
     
