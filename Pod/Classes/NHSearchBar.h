@@ -9,10 +9,6 @@
 @import UIKit;
 #import "NHSearchTextField.h"
 
-extern const CGFloat kNHSearchTextFieldMinLeftInset;
-extern const UIEdgeInsets kNHSearchTextFieldInsets;
-extern const CGFloat kNHSearchButtonWidth;
-
 @interface NHSearchBar : UIView
 
 @property (nonatomic, readonly, strong) NHSearchTextField *textField;

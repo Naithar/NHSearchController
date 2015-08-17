@@ -19,11 +19,6 @@ table, \
 [NSBundle bundleForClass:[NHSearchBar class]], nil)
 
 
-const CGFloat kNHSearchTextFieldMinLeftInset = 25;
-const UIEdgeInsets kNHSearchTextFieldInsets = (UIEdgeInsets) { .left = 25, .right = 20 };
-const CGFloat kNHSearchButtonWidth = 95;
-
-
 @interface NHSearchBar ()
 
 @property (nonatomic, strong) NHSearchTextField *textField;
@@ -45,6 +40,10 @@ const CGFloat kNHSearchButtonWidth = 95;
         [self nhCommonInit];
     }
     return self;
+}
+
+- (void)resetTextInsets:(BOOL)force {
+    [self.textField resetTextInsets:force];
 }
 
 - (void)nhCommonInit {
@@ -220,24 +219,6 @@ const CGFloat kNHSearchButtonWidth = 95;
     
     [self resetTextInsets:YES];
     
-}
-
-- (void)resetTextInsets:(BOOL)force {
-    if (UIEdgeInsetsEqualToEdgeInsets(self.textField.textInset, kNHSearchTextFieldInsets)
-        && !force) {
-        return;
-    }
-    
-    CGSize size = [self.textField.placeholder
-                   boundingRectWithSize:self.textField.bounds.size
-                   options:NSStringDrawingUsesDeviceMetrics|NSStringDrawingUsesFontLeading
-                   attributes:@{ NSFontAttributeName : self.textField.font ?: [UIFont systemFontOfSize:17]}
-                   context:nil].size;
-    
-    CGFloat value = (self.textField.bounds.size.width - size.width) / 2;
-    
-    self.textField.textInset = UIEdgeInsetsMake(0, MAX(kNHSearchTextFieldMinLeftInset, value), 0, 20);
-    [self.textField setNeedsLayout];
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
