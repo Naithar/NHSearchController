@@ -35,6 +35,7 @@
 @property (nonatomic, weak) UIView *initialSearchBarSuperview;
 
 @property (nonatomic, assign) BOOL bottonSeparatorState;
+@property (nonatomic, copy) NSString *searchText;
 @end
 
 @implementation NHSearchController
@@ -116,7 +117,8 @@
 }
 
 - (void)changeText:(NSString*)text {
-    if (!self.searchEnabled) {
+    if (!self.searchEnabled
+        || [self.searchText isEqualToString:text]) {
         return;
     }
     
@@ -125,6 +127,8 @@
     if ([self.nhDelegate respondsToSelector:@selector(nhSearchController:didChangeText:)]) {
         [self.nhDelegate nhSearchController:self didChangeText:text];
     }
+    
+    self.searchText = text;
 }
 
 - (void)startSearch {
@@ -161,6 +165,11 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
+    
+    if ([self.nhDelegate respondsToSelector:@selector(nhSearchController:didChangeText:)]) {
+        [self.nhDelegate nhSearchController:self didChangeText:self.searchText];
+    }
+    
     return YES;
 }
 
