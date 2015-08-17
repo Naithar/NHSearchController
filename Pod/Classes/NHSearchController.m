@@ -33,6 +33,8 @@
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 
 @property (nonatomic, weak) UIView *initialSearchBarSuperview;
+
+@property (nonatomic, assign) BOOL bottonSeparatorState;
 @end
 
 @implementation NHSearchController
@@ -173,6 +175,8 @@
     
     resultFrame.origin.y = CGRectGetMaxY(self.searchBarContainerInitialRect);
     
+    self.searchBar.bottomSeparator.hidden = self.bottonSeparatorState;
+    
     [UIView animateWithDuration:0.3
                           delay:0
                         options:(UIViewAnimationOptionBeginFromCurrentState
@@ -227,6 +231,9 @@
     
     newSearchBarFrame.origin.y = 0;
     newContainerFrame.origin.y = CGRectGetMaxY(newSearchBarFrame);
+    
+    self.bottonSeparatorState = self.searchBar.bottomSeparator.hidden;
+    self.searchBar.bottomSeparator.hidden = NO;
     
     [UIView animateWithDuration:0.3
                           delay:0
