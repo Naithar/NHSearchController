@@ -89,12 +89,20 @@
                                                         -rect.origin.y));
     
     
-
+    
     CGContextClipToMask(context, rect, [self gradientImage]);
-    [view.layer renderInContext:context];
+    
+    if ([view respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
+        [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
+    }
+    else {
+        [view.layer renderInContext:context];
+    }
     
     self.image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+    
+    [self setNeedsDisplay];
 }
 
 - (void)nhCommonInit {
