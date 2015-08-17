@@ -113,7 +113,6 @@
         return;
     }
     
-    self.searchResultView.alpha = 1;//([text length] ? 1 : 0.5);
     self.searchResultView.tableView.hidden = ![text length];
     
     if ([self.nhDelegate respondsToSelector:@selector(nhSearchController:didChangeText:)]) {
@@ -178,8 +177,6 @@
                          [self.searchBar resetTextInsets:YES];
                          self.searchResultView.frame = resultFrame;
                          [self.searchBar layoutIfNeeded];
-                         self.searchResultView.alpha = 0;
-                         self.initialSearchBarSuperview.alpha = 1;
                      } completion:^(BOOL finished) {
                          [self.searchResultView removeFromSuperview];
                          self.searchBar.frame = self.searchBarInitialRect;
@@ -219,7 +216,6 @@
     newContainerFrame.origin.y = CGRectGetMaxY(newSearchBarFrame);
     newContainerFrame.size.height -= newSearchBarFrame.size.height;
     self.searchResultView.tableView.hidden = ![self.searchBar.textField.text length];
-    self.searchResultView.alpha = 0;
     self.searchResultView.frame = newContainerFrame;
     [self.searchResultView setNeedsLayout];
     [self.searchResultView layoutIfNeeded];
@@ -236,8 +232,6 @@
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
                          self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
-                         self.searchResultView.alpha = 1;//([self.searchBar.textField.text length] ? 1 : 0.5);
-                         self.initialSearchBarSuperview.alpha = 0;
                          [self.searchBar layoutIfNeeded];
                      } completion:^(BOOL finished) {
                          
