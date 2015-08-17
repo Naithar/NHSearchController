@@ -12,30 +12,40 @@
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIImage *image;
+@property (nonatomic, weak) UIView *searchBackgroundView;
 
 @end
 
 @implementation NHSearchResultView
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+- (instancetype)initWithBackgroundView:(UIView *)view {
+    self = [super initWithFrame:CGRectZero];
     
     if (self) {
+        _searchBackgroundView = view;
+        
         [self nhCommonInit];
     }
     return self;
 }
 
+- (void)prepareWithOffsetPoint:(CGPoint)point {
+    self.image = nil;
+    if (!self.searchBackgroundView) {
+        return;
+    }
+    
+    CGRect snapshotRect = CGRectMake(point.x,
+                                     point.y,
+                                     self.searchBackgroundView.bounds.size.width - point.x,
+                                     self.searchBackgroundView.bounds.size.height - point.y);
+    [self getSnapshotForView:self.searchBackgroundView withRect:snapshotRect];
+}
+
 - (void)drawRect:(CGRect)rect {
-    
-    
-//    CGContextRef imageContext = UIGraphicsGetCurrentContext();
-//    CGContextClipToMask(imageContext, self.bounds, maskImage);
     [self.image drawInRect:CGRectMake(rect.origin.x, rect.origin.y, self.image.size.width, self.image.size.height)];
     
-//    CGImageRelease(maskImage);
-    
-    [[(self.overlayColor ?: [UIColor blackColor]) colorWithAlphaComponent:0.5] set];
+    [(self.overlayColor ?: [[UIColor blackColor] colorWithAlphaComponent:0.5]) set];
     
     [[UIBezierPath bezierPathWithRect:rect] fill];
 }
@@ -53,7 +63,7 @@
             1.0, 1.0, 1.0, 1.0,
             .0, .0, .0, .0,
         };
-        CGFloat locations[2] = { 0.0, 0.8 };
+        CGFloat locations[2] = { 0.0, 0.9 };
         
         CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, components, locations, componentCount);
         CGPoint startPoint = CGPointMake(0, 100);

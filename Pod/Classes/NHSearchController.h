@@ -35,6 +35,8 @@
 @property (nonatomic, assign) BOOL shouldOffsetStatusBar;
 
 - (instancetype)initWithContainerViewController:(UIViewController*)container;
+- (instancetype)initWithContainerViewController:(UIViewController*)container
+                                    andBackgroundView:(UIView*)view;
 
 - (void)hideSearch;
 - (void)showSearch;

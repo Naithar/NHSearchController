@@ -13,6 +13,6 @@
 @property (nonatomic, strong) UIColor *overlayColor;
 @property (nonatomic, readonly, strong) UITableView *tableView;
 
-- (void)getSnapshotForView:(UIView*)view withRect:(CGRect)rect;
-
+- (instancetype)initWithBackgroundView:(UIView*)view;
+- (void)prepareWithOffsetPoint:(CGPoint)point;
 @end

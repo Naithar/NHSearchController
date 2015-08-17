@@ -21,7 +21,7 @@
 {
     [super viewDidLoad];
 	
-    self.nhSearchController = [[NHSearchController alloc] initWithContainerViewController:self.navigationController];
+    self.nhSearchController = [[NHSearchController alloc] initWithContainerViewController:self.navigationController andBackgroundView:self.navigationController.view];
     
     self.tableView.tableHeaderView = self.nhSearchController.searchBar;
 }

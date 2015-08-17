@@ -17,7 +17,8 @@
 @interface NHSearchController ()<UITextFieldDelegate>
 
 @property (nonatomic, weak) UIViewController *container;
-//@property (nonatomic, assign) CGRect containerInitialRect;
+@property (nonatomic, weak) UIView *searchBackgroundView;
+
 @property (nonatomic, assign) CGRect searchBarInitialRect;
 @property (nonatomic, assign) CGRect searchBarContainerInitialRect;
 
@@ -37,10 +38,16 @@
 @implementation NHSearchController
 
 - (instancetype)initWithContainerViewController:(UIViewController*)container {
+    return [self initWithContainerViewController:container andBackgroundView:nil];
+}
+
+- (instancetype)initWithContainerViewController:(UIViewController*)container
+                              andBackgroundView:(UIView*)view {
     self = [super init];
     
     if (self) {
         _container = container;
+        _searchBackgroundView = view;
         _shouldOffsetStatusBar = YES;
         [self nhCommonInit];
     }
@@ -49,8 +56,6 @@
 
 
 - (void)nhCommonInit {
-    //    self.containerInitialRect = self.container.view.frame;
-    
     self.searchBar = [[NHSearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     self.searchBar.backgroundColor = [UIColor lightGrayColor];
     self.searchBar.textField.delegate = self;
@@ -70,9 +75,9 @@
                            [strongSelf changeText:strongSelf.searchBar.textField.text];
                        }];
     
-    self.searchResultView = [[NHSearchResultView alloc] init];
-    self.searchResultView.backgroundColor = [UIColor whiteColor];
-    self.searchResultView.overlayColor = [UIColor grayColor];
+    self.searchResultView = [[NHSearchResultView alloc] initWithBackgroundView:self.searchBackgroundView];
+    self.searchResultView.backgroundColor = self.searchBackgroundView ? [UIColor whiteColor] : [UIColor clearColor];
+    self.searchResultView.overlayColor = [[UIColor grayColor] colorWithAlphaComponent:0.5];
     
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)];
     [self.searchResultView addGestureRecognizer:self.tapGesture];
@@ -192,28 +197,25 @@
     self.searchBarInitialRect = self.searchBar.frame;
     self.initialSearchBarSuperview = self.searchBar.superview;
     
-    CGRect shapshotRect = self.initialSearchBarSuperview.bounds;
-    shapshotRect.origin.y = CGRectGetMaxY(self.searchBarInitialRect);
-//    shapshotRect.size.height -= CGRectGetMaxY(self.searchBarInitialRect);
-    [self.searchResultView getSnapshotForView:self.initialSearchBarSuperview withRect:shapshotRect];
-    
     self.searchBarContainerInitialRect = [self.searchBar convertRect:self.searchBar.bounds toView:self.container.view];
     CGRect newSearchBarFrame = self.searchBarContainerInitialRect;
     CGRect newContainerFrame = self.container.view.frame;
+    
+    CGRect backgroundViewOffsetRect = [self.searchBar convertRect:self.searchBar.bounds toView:self.searchBackgroundView];
+    [self.searchResultView prepareWithOffsetPoint:CGPointMake(0, CGRectGetMaxY(backgroundViewOffsetRect))];
     
     self.searchBar.frame = newSearchBarFrame;
     [self.container.view addSubview:self.searchBar];
     [self.container.view addSubview:self.searchResultView];
     [self.container.view bringSubviewToFront:self.searchBar];
     
+    newContainerFrame.origin.y = CGRectGetMaxY(newSearchBarFrame);
     
     if (self.shouldOffsetStatusBar) {
         CGFloat statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
         newSearchBarFrame.size.height += statusBarHeight;
-        
     }
     
-    newContainerFrame.origin.y = CGRectGetMaxY(newSearchBarFrame);
     newContainerFrame.size.height -= newSearchBarFrame.size.height;
     self.searchResultView.tableView.hidden = ![self.searchBar.textField.text length];
     self.searchResultView.frame = newContainerFrame;
