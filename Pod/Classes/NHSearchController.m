@@ -166,7 +166,7 @@
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
                          self.searchBar.frame = self.searchBarContainerInitialRect;
-                         [self.searchBar resetTextInsets:YES];
+                         self.searchBar.textField.textAlignment = NSTextAlignmentCenter;
                          self.searchResultView.frame = resultFrame;
                          [self.searchBar layoutIfNeeded];
                      } completion:^(BOOL finished) {
@@ -223,7 +223,7 @@
                         options:(UIViewAnimationOptionBeginFromCurrentState
                                  |UIViewAnimationCurveEaseIn)
                      animations:^{
-                         self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
+                         self.searchBar.textField.textAlignment = NSTextAlignmentLeft;
                          [self.searchBar layoutIfNeeded];
                      } completion:^(BOOL finished) {
                          
@@ -231,7 +231,7 @@
     
     [UIView animateWithDuration:0.3 animations:^{
         self.searchBar.frame = newSearchBarFrame;
-        self.searchBar.textField.textInset = kNHSearchTextFieldInsets;
+        self.searchBar.textField.textAlignment = NSTextAlignmentLeft;
         self.searchResultView.frame = newContainerFrame;
         [self.searchResultView layoutIfNeeded];
     }];

@@ -8,17 +8,38 @@
 
 #import "NHSearchTextField.h"
 
-const CGFloat kNHSearchTextFieldMinLeftInset = 25;
-const UIEdgeInsets kNHSearchTextFieldInsets = (UIEdgeInsets) { .left = 25, .right = 20 };
-const CGFloat kNHSearchButtonWidth = 95;
+const CGFloat kNHSearchTextFieldMinLeftInset = 5;
+//const UIEdgeInsets kNHSearchTextFieldInsets = (UIEdgeInsets) { .left = 25, .right = 20 };
+
 
 @interface NHSearchTextField ()
 
 @property (nonatomic, strong) id textChange;
+@property (nonatomic, assign) UIEdgeInsets textInset;
+@property (nonatomic, assign) NSTextAlignment nhTextAlignment;
 @end
 
 @implementation NHSearchTextField
 
+- (void)setTextAlignment:(NSTextAlignment)textAlignment {
+    [super setTextAlignment:NSTextAlignmentLeft];
+    _nhTextAlignment = textAlignment;
+    [self resetTextInsets];
+}
+
+- (NSTextAlignment)textAlignment {
+    return NSTextAlignmentLeft;
+}
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    [self resetTextInsets];
+}
+
+- (void)setBounds:(CGRect)bounds {
+    [super setBounds:bounds];
+    [self resetTextInsets];
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -45,6 +66,9 @@ const CGFloat kNHSearchButtonWidth = 95;
                            [strongSelf changeText:strongSelf.text];
                        }];
     
+//    self.textAlignment = NSTextAlignmentCenter;
+    [self resetTextInsets];
+    
 }
 
 - (CGRect)textRectForBounds:(CGRect)bounds {
@@ -62,22 +86,47 @@ const CGFloat kNHSearchButtonWidth = 95;
     return rect;
 }
 
-- (void)resetTextInsets:(BOOL)force {
-    if (UIEdgeInsetsEqualToEdgeInsets(self.textInset, kNHSearchTextFieldInsets)
-        && !force) {
-        return;
+- (void)setLeftView:(UIView *)leftView {
+    [super setLeftView:leftView];
+    
+    [self resetTextInsets];
+}
+
+- (void)setFont:(UIFont *)font {
+    [super setFont:font];
+    
+    [self resetTextInsets];
+}
+
+- (void)setPlaceholder:(NSString *)placeholder {
+    [super setPlaceholder:placeholder];
+    
+    [self resetTextInsets];
+}
+
+- (void)resetTextInsets {
+    switch (_nhTextAlignment) {
+        case NSTextAlignmentLeft: {
+            CGFloat value = (self.leftView
+                             ? self.leftView.bounds.size.width + 5
+                             : 5);
+            self.textInset = UIEdgeInsetsMake(0, MAX(kNHSearchTextFieldMinLeftInset, value), 0, 20);
+        } break;
+        default: {
+            CGSize size = [self.placeholder
+                           boundingRectWithSize:self.bounds.size
+                           options:NSStringDrawingUsesDeviceMetrics|NSStringDrawingUsesFontLeading
+                           attributes:@{ NSFontAttributeName : self.font ?: [UIFont systemFontOfSize:17]}
+                           context:nil].size;
+            
+            CGFloat value = (self.bounds.size.width - size.width) / 2;
+            
+            self.textInset = UIEdgeInsetsMake(0, MAX(kNHSearchTextFieldMinLeftInset, value), 0, 20);
+        } break;
     }
-    
-    CGSize size = [self.placeholder
-                   boundingRectWithSize:self.bounds.size
-                   options:NSStringDrawingUsesDeviceMetrics|NSStringDrawingUsesFontLeading
-                   attributes:@{ NSFontAttributeName : self.font ?: [UIFont systemFontOfSize:17]}
-                   context:nil].size;
-    
-    CGFloat value = (self.bounds.size.width - size.width) / 2;
-    
-    self.textInset = UIEdgeInsetsMake(0, MAX(kNHSearchTextFieldMinLeftInset, value), 0, 20);
     [self setNeedsLayout];
+    [self layoutIfNeeded];
+    [self setNeedsDisplay];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath

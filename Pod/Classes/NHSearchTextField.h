@@ -10,8 +10,8 @@
 @import UIKit;
 
 extern const CGFloat kNHSearchTextFieldMinLeftInset;
-extern const UIEdgeInsets kNHSearchTextFieldInsets;
-extern const CGFloat kNHSearchButtonWidth;
+//extern const UIEdgeInsets kNHSearchTextFieldInsets;
+
 
 @class NHSearchTextField;
 
@@ -24,8 +24,8 @@ extern const CGFloat kNHSearchButtonWidth;
 @interface NHSearchTextField : UITextField
 
 @property (nonatomic, weak) id<NHSearchTextFieldDelegate> nhDelegate;
-@property (nonatomic, assign) UIEdgeInsets textInset;
+@property (nonatomic, readonly, assign) NSTextAlignment nhTextAlignment;
 
-- (void)resetTextInsets:(BOOL)force;
+//- (void)resetTextInsets:(BOOL)force;
 
 @end

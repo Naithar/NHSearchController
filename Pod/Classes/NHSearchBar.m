@@ -18,6 +18,7 @@ NSLocalizedStringFromTableInBundle(name, \
 table, \
 [NSBundle bundleForClass:[NHSearchBar class]], nil)
 
+const CGFloat kNHSearchButtonWidth = 95;
 
 @interface NHSearchBar ()
 
@@ -42,10 +43,6 @@ table, \
     return self;
 }
 
-- (void)resetTextInsets:(BOOL)force {
-    [self.textField resetTextInsets:force];
-}
-
 - (void)nhCommonInit {
     self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     self.imageView.backgroundColor = [UIColor clearColor];
@@ -60,9 +57,8 @@ table, \
     
     self.textField.placeholder = localization(@"NHSearch.placeholder", @"NHSearch");
     self.textField.returnKeyType = UIReturnKeySearch;
-    self.textField.textAlignment = NSTextAlignmentLeft;
+    self.textField.textAlignment = NSTextAlignmentCenter;
     self.textField.leftView = self.imageView;
-    self.textField.textInset = kNHSearchTextFieldInsets;
     self.textField.leftViewMode = UITextFieldViewModeAlways;
     self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     [self addSubview:self.textField];
@@ -216,9 +212,6 @@ table, \
                                       toItem:self.topSeparator
                                       attribute:NSLayoutAttributeHeight
                                       multiplier:0 constant:0.5]];
-    
-    [self resetTextInsets:YES];
-    
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -227,8 +220,6 @@ table, \
 
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
-    
-    [self resetTextInsets:YES];
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -236,8 +227,6 @@ table, \
     
     [self setNeedsLayout];
     [self layoutIfNeeded];
-    
-    [self resetTextInsets:NO];
 }
 
 - (void)setBounds:(CGRect)bounds {

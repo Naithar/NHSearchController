@@ -9,6 +9,8 @@
 @import UIKit;
 #import "NHSearchTextField.h"
 
+extern const CGFloat kNHSearchButtonWidth;
+
 @interface NHSearchBar : UIView
 
 @property (nonatomic, readonly, strong) NHSearchTextField *textField;
@@ -19,6 +21,5 @@
 
 
 - (void)setCloseButtonHidden:(BOOL)hidden;
-- (void)resetTextInsets:(BOOL)force;
 
 @end
