@@ -160,7 +160,7 @@
     
     self.searchBar.bottomSeparator.hidden = self.bottonSeparatorState;
     
-    [UIView animateWithDuration:0.3
+    [UIView animateWithDuration:0.25
                           delay:0
                         options:(UIViewAnimationOptionBeginFromCurrentState
                                  |UIViewAnimationCurveEaseIn)
@@ -170,9 +170,13 @@
                          self.searchResultView.frame = resultFrame;
                          [self.searchBar layoutIfNeeded];
                      } completion:^(BOOL finished) {
-                         [self.searchResultView removeFromSuperview];
-                         self.searchBar.frame = self.searchBarInitialRect;
-                         [self.initialSearchBarSuperview addSubview:self.searchBar];
+                         [UIView animateWithDuration:0.15 animations:^{
+                             self.searchResultView.alpha = 0;
+                         } completion:^(BOOL finished) {
+                             [self.searchResultView removeFromSuperview];
+                             self.searchBar.frame = self.searchBarInitialRect;
+                             [self.initialSearchBarSuperview addSubview:self.searchBar];
+                         }];
                      }];
 }
 - (void)showSearch {
@@ -217,6 +221,11 @@
     
     self.bottonSeparatorState = self.searchBar.bottomSeparator.hidden;
     self.searchBar.bottomSeparator.hidden = NO;
+    
+    self.searchResultView.alpha = 0;
+    [UIView animateWithDuration:0.1 animations:^{
+        self.searchResultView.alpha = 1;
+    }];
     
     [UIView animateWithDuration:0.3
                           delay:0
