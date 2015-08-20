@@ -68,6 +68,7 @@
     self.searchResultView.overlayColor = [[UIColor grayColor] colorWithAlphaComponent:0.5];
     
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)];
+    self.tapGesture.cancelsTouchesInView = NO;
     [self.searchResultView addGestureRecognizer:self.tapGesture];
     
     [self.searchBar setNeedsLayout];
