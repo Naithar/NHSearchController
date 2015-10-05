@@ -51,6 +51,16 @@ const CGFloat kNHSearchTextFieldMinLeftInset = 5;
     return self;
 }
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    
+    if (self) {
+        [self nhCommonInit];
+    }
+    
+    return self;
+}
+
 - (void)nhCommonInit {
     [self addObserver:self
            forKeyPath:@"text"
