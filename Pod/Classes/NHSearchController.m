@@ -34,6 +34,8 @@
 
 @property (nonatomic, assign) BOOL bottonSeparatorState;
 @property (nonatomic, copy) NSString *searchText;
+
+@property (nonatomic, strong) UIWindow *containerWindow;
 @end
 
 @implementation NHSearchController
@@ -176,6 +178,11 @@
                          } completion:^(BOOL finished) {
                              [self.searchResultView removeFromSuperview];
                              self.searchBar.frame = self.searchBarInitialRect;
+                             [self.containerWindow removeFromSuperview];
+                             self.containerWindow.hidden = YES;
+                             [[[UIApplication sharedApplication] delegate].window makeKeyWindow];
+                             self.containerWindow = nil;
+
                              [self.initialSearchBarSuperview addSubview:self.searchBar];
                          }];
                      }];
@@ -197,9 +204,15 @@
     [self.searchResultView prepareWithOffsetPoint:CGPointMake(0, CGRectGetMaxY(backgroundViewOffsetRect))];
     
     self.searchBar.frame = newSearchBarFrame;
-    [self.container.view addSubview:self.searchBar];
-    [self.container.view addSubview:self.searchResultView];
-    [self.container.view bringSubviewToFront:self.searchBar];
+    
+    [self.containerWindow removeFromSuperview];
+    self.containerWindow = nil;
+    self.containerWindow = [[UIWindow alloc] initWithFrame:self.container.view.bounds];
+    [self.containerWindow makeKeyAndVisible];
+    
+    [self.containerWindow addSubview:self.searchBar];
+    [self.containerWindow addSubview:self.searchResultView];
+    [self.containerWindow bringSubviewToFront:self.searchBar];
     
     newContainerFrame.origin.y = CGRectGetMaxY(newSearchBarFrame);
     
@@ -258,6 +271,7 @@
     
     [self.searchBar removeFromSuperview];
     [self.searchResultView removeFromSuperview];
+    self.containerWindow = nil;
 }
 
 @end
