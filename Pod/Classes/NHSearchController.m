@@ -151,7 +151,8 @@
 }
 
 - (void)hideSearch {
-    if (CGRectEqualToRect(CGRectZero, self.searchBarInitialRect)) {
+    if (CGRectEqualToRect(CGRectZero, self.searchBarInitialRect)
+        || !self.containerWindow) {
         return;
     }
     
@@ -179,14 +180,16 @@
                              [self.searchResultView removeFromSuperview];
                              self.searchBar.frame = self.searchBarInitialRect;
                              [self.containerWindow removeFromSuperview];
-                             self.containerWindow.hidden = YES;
-                             [[[UIApplication sharedApplication] delegate].window makeKeyWindow];
-                             self.containerWindow = nil;
-
                              [self.initialSearchBarSuperview addSubview:self.searchBar];
+                             [self.container.view setNeedsLayout];
+                             [self.container.view layoutIfNeeded];
+                             self.containerWindow.hidden = YES;
+                             self.containerWindow = nil;
+                             [[[UIApplication sharedApplication] delegate].window makeKeyWindow];
                          }];
                      }];
 }
+
 - (void)showSearch {
     
     if (!self.searchEnabled) {
